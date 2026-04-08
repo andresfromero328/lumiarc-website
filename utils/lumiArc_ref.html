@@ -1,0 +1,4415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LumiArc — Project Reference</title>
+    <style>
+      :root {
+        --color-text-primary: #1a1a1a;
+        --color-text-secondary: #555;
+        --color-text-tertiary: #999;
+        --color-text-info: #2563eb;
+        --color-text-success: #16a34a;
+        --color-text-warning: #d97706;
+        --color-background-primary: #ffffff;
+        --color-background-secondary: #f5f5f5;
+        --color-background-tertiary: #ebebeb;
+        --color-border-tertiary: #e5e5e5;
+        --color-border-secondary: #d4d4d4;
+        --border-radius-lg: 10px;
+        --border-radius-md: 7px;
+        --font-mono: "JetBrains Mono", "Fira Mono", "Cascadia Code", monospace;
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background: #f8f8f6;
+        color: var(--color-text-primary);
+        min-height: 100vh;
+        padding: 0;
+      }
+
+      /* ── Header ── */
+      .header {
+        background: #fff;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        padding: 20px 40px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-top {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .logo {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .logo-sub {
+        font-size: 13px;
+        color: var(--color-text-tertiary);
+      }
+
+      .tabs {
+        display: flex;
+        gap: 0;
+      }
+      .tab {
+        font-size: 13px;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: var(--color-text-secondary);
+        transition: all 0.15s;
+        white-space: nowrap;
+        user-select: none;
+      }
+      .tab:hover {
+        color: var(--color-text-primary);
+      }
+      .tab.active {
+        color: var(--color-text-primary);
+        border-bottom-color: #1a1a1a;
+        font-weight: 500;
+      }
+
+      /* ── Layout ── */
+      .page {
+        display: none;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .page.active {
+        display: block;
+        padding: 32px 40px 60px;
+      }
+
+      /* ── Shared components ── */
+      .section {
+        margin-bottom: 32px;
+      }
+      .section-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+      }
+      .card {
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 1rem 1.25rem;
+        margin-bottom: 10px;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .card-sub {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 9px;
+        border-radius: 10px;
+        margin-right: 4px;
+      }
+      .b-teal {
+        background: #e1f5ee;
+        color: #085041;
+      }
+      .b-amber {
+        background: #faeeda;
+        color: #633806;
+      }
+      .b-coral {
+        background: #faece7;
+        color: #712b13;
+      }
+      .b-purple {
+        background: #eeedfe;
+        color: #3c3489;
+      }
+      .b-green {
+        background: #eaf3de;
+        color: #27500a;
+      }
+      .b-gray {
+        background: var(--color-background-secondary);
+        color: var(--color-text-secondary);
+      }
+      .b-blue {
+        background: #e6f1fb;
+        color: #0c447c;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 8px 0;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        font-size: 13px;
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .row-label {
+        font-weight: 500;
+        min-width: 180px;
+        flex-shrink: 0;
+      }
+      .row-val {
+        color: var(--color-text-secondary);
+        flex: 1;
+        line-height: 1.5;
+      }
+
+      .stat {
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-md);
+        padding: 14px;
+        text-align: center;
+      }
+      .stat-val {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        margin-top: 3px;
+      }
+
+      /* ── Pillars ── */
+      .pillar {
+        border-radius: var(--border-radius-lg);
+        border: 0.5px solid var(--color-border-tertiary);
+        overflow: hidden;
+      }
+      .pillar-head {
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .pillar-body {
+        padding: 8px 14px 12px;
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        background: #fff;
+      }
+      .pillar-body div {
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        padding: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pillar-body div:last-child {
+        border-bottom: none;
+      }
+      .p-teal .pillar-head {
+        background: #e1f5ee;
+        color: #085041;
+      }
+      .p-amber .pillar-head {
+        background: #faeeda;
+        color: #633806;
+      }
+      .p-coral .pillar-head {
+        background: #faece7;
+        color: #712b13;
+      }
+
+      /* ── Routing table ── */
+      .route-table {
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        background: #fff;
+      }
+      .route-head {
+        display: grid;
+        grid-template-columns: 90px 1fr 1fr 110px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        padding: 9px 16px;
+        background: var(--color-background-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .route-row {
+        display: grid;
+        grid-template-columns: 90px 1fr 1fr 110px;
+        padding: 10px 16px;
+        border-top: 0.5px solid var(--color-border-tertiary);
+        font-size: 12px;
+        align-items: center;
+      }
+      .route-row span {
+        color: var(--color-text-secondary);
+        line-height: 1.4;
+      }
+
+      /* ── Prompt builder ── */
+      .pb {
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .layer {
+        border-radius: var(--border-radius-md);
+        margin-bottom: 10px;
+        overflow: hidden;
+        border: 0.5px solid var(--color-border-tertiary);
+      }
+      .layer-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        cursor: pointer;
+        user-select: none;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+        transition: opacity 0.1s;
+      }
+      .layer-head:hover {
+        opacity: 0.85;
+      }
+      .layer-head .badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: 400;
+      }
+      .layer-head .toggle {
+        font-size: 11px;
+        color: inherit;
+        opacity: 0.6;
+        margin-left: 8px;
+      }
+      .layer-body {
+        padding: 14px 16px;
+        border-top: 0.5px solid var(--color-border-tertiary);
+        background: #fff;
+      }
+      .layer-body pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.7;
+        font-size: 12px;
+        color: var(--color-text-primary);
+      }
+      .comment {
+        color: var(--color-text-tertiary);
+      }
+      .key {
+        color: var(--color-text-info);
+      }
+      .val {
+        color: var(--color-text-success);
+      }
+      .warn {
+        color: var(--color-text-warning);
+      }
+      .note {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-left: 2px solid var(--color-border-secondary);
+        background: var(--color-background-secondary);
+        border-radius: 0 4px 4px 0;
+        line-height: 1.5;
+      }
+      .l1 .layer-head {
+        background: #eeedfe;
+        color: #3c3489;
+      }
+      .l1 .badge {
+        background: #cecbf6;
+        color: #26215c;
+      }
+      .l2 .layer-head {
+        background: #e1f5ee;
+        color: #085041;
+      }
+      .l2 .badge {
+        background: #9fe1cb;
+        color: #04342c;
+      }
+      .l3 .layer-head {
+        background: #faeeda;
+        color: #633806;
+      }
+      .l3 .badge {
+        background: #fac775;
+        color: #412402;
+      }
+      .l4 .layer-head {
+        background: #faece7;
+        color: #712b13;
+      }
+      .l4 .badge {
+        background: #f5c4b3;
+        color: #4a1b0c;
+      }
+      .l5 .layer-head {
+        background: var(--color-background-secondary);
+        color: var(--color-text-primary);
+      }
+      .l5 .badge {
+        background: var(--color-background-tertiary);
+        color: var(--color-text-secondary);
+      }
+
+      /* ── Sub-nav ── */
+      .subnav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 28px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        padding-bottom: 0;
+      }
+      .subnav-tab {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 18px;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+        border: 0.5px solid transparent;
+        border-bottom: none;
+        color: var(--color-text-secondary);
+        background: transparent;
+        transition: all 0.15s;
+        user-select: none;
+        margin-bottom: -0.5px;
+      }
+      .subnav-tab:hover {
+        color: var(--color-text-primary);
+        background: var(--color-background-secondary);
+      }
+      .subnav-tab.active {
+        color: var(--color-text-primary);
+        background: #fff;
+        border-color: var(--color-border-tertiary);
+        border-bottom-color: #fff;
+      }
+      .subnav-tab.sn-teal.active {
+        background: #e1f5ee;
+        border-color: #b2e4d0;
+        border-bottom-color: #e1f5ee;
+        color: #085041;
+      }
+      .subnav-tab.sn-amber.active {
+        background: #faeeda;
+        border-color: #f0d9b5;
+        border-bottom-color: #faeeda;
+        color: #633806;
+      }
+      .subnav-tab.sn-coral.active {
+        background: #faece7;
+        border-color: #f5cfc4;
+        border-bottom-color: #faece7;
+        color: #712b13;
+      }
+      .subpage {
+        display: none;
+      }
+      .subpage.active {
+        display: block;
+      }
+
+      .assembly {
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 16px 20px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 2;
+      }
+      .asm-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .asm-arrow {
+        color: var(--color-text-tertiary);
+      }
+      .asm-label {
+        min-width: 260px;
+      }
+      .asm-note {
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        font-family: var(--font-sans);
+      }
+
+      /* ── Accuracy ── */
+      .acc-layer {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px 16px;
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-md);
+        margin-bottom: 8px;
+      }
+      .acc-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .acc-title {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 3px;
+      }
+      .acc-desc {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        line-height: 1.5;
+      }
+
+      /* ── Open questions ── */
+      .open-q {
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-md);
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.15s;
+      }
+      .open-q:hover {
+        background: var(--color-background-secondary);
+      }
+      .q-num {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        min-width: 64px;
+      }
+      .q-text {
+        flex: 1;
+      }
+      .q-arrow {
+        color: var(--color-text-tertiary);
+        font-size: 12px;
+      }
+
+      /* ── Resolved decisions ── */
+      .decision-block {
+        background: #fff;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .decision-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--color-background-secondary);
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+      }
+      .decision-num {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        min-width: 72px;
+      }
+      .decision-title {
+        font-size: 13px;
+        font-weight: 500;
+        flex: 1;
+      }
+      .decision-status {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 9px;
+        border-radius: 10px;
+        letter-spacing: 0.04em;
+      }
+      .status-resolved {
+        background: #eaf3de;
+        color: #27500a;
+      }
+      .status-open {
+        background: #faeeda;
+        color: #633806;
+      }
+      .decision-body {
+        padding: 16px;
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--color-text-secondary);
+      }
+      .decision-body strong {
+        color: var(--color-text-primary);
+        font-weight: 500;
+      }
+      .decision-body ul {
+        margin: 8px 0 8px 16px;
+      }
+      .decision-body li {
+        margin-bottom: 4px;
+      }
+      .decision-body .implication {
+        margin-top: 12px;
+        padding: 10px 14px;
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-md);
+        font-size: 12px;
+      }
+      .decision-body .implication-title {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+
+      /* ── Pillar audit table ── */
+      .audit-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-bottom: 20px;
+      }
+      .audit-table th {
+        text-align: left;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 8px 12px;
+        background: var(--color-background-secondary);
+        border: 0.5px solid var(--color-border-tertiary);
+      }
+      .audit-table td {
+        padding: 9px 12px;
+        border: 0.5px solid var(--color-border-tertiary);
+        color: var(--color-text-secondary);
+        vertical-align: top;
+        line-height: 1.5;
+      }
+      .audit-table tr:hover td {
+        background: #fafafa;
+      }
+      .audit-table td:first-child {
+        font-weight: 500;
+        color: var(--color-text-primary);
+        white-space: nowrap;
+      }
+      .mvp-yes {
+        color: #27500a;
+        font-weight: 600;
+      }
+      .mvp-later {
+        color: #633806;
+        font-weight: 500;
+      }
+      .type-ai {
+        background: #eeedfe;
+        color: #3c3489;
+      }
+      .type-data {
+        background: #e1f5ee;
+        color: #085041;
+      }
+      .type-integration {
+        background: #faeeda;
+        color: #633806;
+      }
+      .type-mixed {
+        background: #faece7;
+        color: #712b13;
+      }
+      .audit-note {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        padding: 8px 12px;
+        background: var(--color-background-secondary);
+        border-left: 2px solid var(--color-border-secondary);
+        border-radius: 0 4px 4px 0;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .swatch {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        vertical-align: middle;
+        margin-right: 6px;
+        border: 0.5px solid rgba(0,0,0,0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-top">
+        <div class="logo">LumiArc</div>
+        <div class="logo-sub">AI College Advisor — Project Reference</div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('overview')">Overview</div>
+        <div class="tab" onclick="switchTab('pillars')">Pillars</div>
+        <div class="tab" onclick="switchTab('models')">Model Architecture</div>
+        <div class="tab" onclick="switchTab('prompts')">Prompt Engineering</div>
+        <div class="tab" onclick="switchTab('accuracy')">Accuracy Strategy</div>
+        <div class="tab" onclick="switchTab('pricing')">
+          Pricing &amp; Costs
+        </div>
+        <div class="tab" onclick="switchTab('decisions')">Decisions</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 1 — OVERVIEW
+══════════════════════════════════════════════ -->
+    <div class="page active" id="tab-overview">
+      <div class="section">
+        <div class="section-title">What it is</div>
+        <div class="card">
+          <div class="card-title" style="font-size: 16px">LumiArc</div>
+          <div
+            class="card-sub"
+            style="font-size: 13px; margin-top: 6px; line-height: 1.7"
+          >
+            An AI-powered college advisor for every student — providing
+            personalized, campus-aware guidance across academic planning,
+            financial aid, and career preparation. LumiArc knows the student's
+            school, country, financial situation, and goals from day one, and
+            proactively surfaces what they need to do next before they even know
+            to ask.
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            LumiArc's core value proposition: counselors are hard to reach, have
+            appointment wait times of weeks, and change mid-semester with no
+            institutional memory. LumiArc is the constant — always available,
+            always current, always aware of the student's full situation. It
+            fills the gap between counselor appointments and makes those
+            appointments more productive when they happen.
+          </div>
+        </div>
+        <div class="grid-4" style="margin-top: 10px">
+          <div class="stat">
+            <div class="stat-val">Low</div>
+            <div class="stat-label">Competition</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">All students</div>
+            <div class="stat-label">Primary audience</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">US first</div>
+            <div class="stat-label">Launch market</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">3 pillars</div>
+            <div class="stat-label">Core features</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Three core pillars</div>
+        <div class="grid-3">
+          <div class="pillar p-teal">
+            <div class="pillar-head">Academic planning</div>
+            <div class="pillar-body">
+              <div>
+                <span>Degree Overview</span
+                ><span class="badge b-green">Simple</span>
+              </div>
+              <div>
+                <span>Requirements Checklist</span
+                ><span class="badge b-teal">Normal</span>
+              </div>
+              <div>
+                <span>GPA Tracker</span><span class="badge b-teal">Normal</span>
+              </div>
+              <div>
+                <span>Grade Tracker</span
+                ><span class="badge b-amber">Advanced</span>
+              </div>
+              <div>
+                <span>Semester Schedule</span
+                ><span class="badge b-amber">Advanced</span>
+              </div>
+              <div>
+                <span>Degree Path</span
+                ><span class="badge b-coral">Complex</span>
+              </div>
+            </div>
+          </div>
+          <div class="pillar p-amber">
+            <div class="pillar-head">Financial aid</div>
+            <div class="pillar-body">
+              <div>
+                <span>FAFSA deadline alerts</span
+                ><span class="badge b-green">Simple</span>
+              </div>
+              <div>
+                <span>Grant eligibility check</span
+                ><span class="badge b-teal">Normal</span>
+              </div>
+              <div>
+                <span>Scholarship matcher</span
+                ><span class="badge b-amber">Advanced</span>
+              </div>
+              <div>
+                <span>Loan tracker</span
+                ><span class="badge b-teal">Normal</span>
+              </div>
+              <div>
+                <span>Aid health check</span
+                ><span class="badge b-coral">Complex</span>
+              </div>
+              <div>
+                <span>Work-study matching</span
+                ><span class="badge b-teal">Normal</span>
+              </div>
+            </div>
+          </div>
+          <div class="pillar p-coral">
+            <div class="pillar-head">Career prep</div>
+            <div class="pillar-body">
+              <div>
+                <span>Internship deadlines</span
+                ><span class="badge b-green">Simple</span>
+              </div>
+              <div>
+                <span>Internship finder</span
+                ><span class="badge b-teal">Normal</span>
+              </div>
+              <div>
+                <span>Resume feedback</span
+                ><span class="badge b-amber">Advanced</span>
+              </div>
+              <div>
+                <span>Interview prep</span
+                ><span class="badge b-amber">Advanced</span>
+              </div>
+              <div>
+                <span>Career roadmap</span
+                ><span class="badge b-coral">Complex</span>
+              </div>
+              <div>
+                <span>Career fair calendar</span
+                ><span class="badge b-green">Simple</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Key differentiators</div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title">Campus-aware</div>
+            <div class="card-sub">
+              Knows the student's specific school, its deadlines, rules, and
+              resources. Not generic advice — tailored to their institution.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Proactive timeline</div>
+            <div class="card-sub">
+              Surfaces deadlines before they hit, with urgency levels (urgent /
+              soon / upcoming) and direct advisor links per item.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Plain language, always</div>
+            <div class="card-sub">
+              No assumed knowledge. Defines jargon on first use. Explains
+              context that other tools skip. Useful for every student,
+              especially those navigating the system without a guide.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          Student onboarding — context collected at setup
+        </div>
+        <div class="card">
+          <div class="row">
+            <span class="row-label">Country &amp; institution</span
+            ><span class="row-val"
+              >Drives financial aid system (FAFSA vs OSAP vs Student Finance)
+              and school-specific deadlines</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Year &amp; enrollment status</span
+            ><span class="row-val"
+              >Full-time / part-time affects aid eligibility and advice
+              relevance</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Major &amp; credits earned</span
+            ><span class="row-val"
+              >Powers degree progress tracking and course planning</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Student type</span
+            ><span class="row-val"
+              >First-gen, dependent/independent, domestic/international — shapes
+              resources surfaced and context provided</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Aid status</span
+            ><span class="row-val"
+              >FAFSA filed, grants received, loans — feeds the financial pillar
+              and alerts</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Career goal</span
+            ><span class="row-val"
+              >Target role and timeline — personalizes internship matching and
+              career roadmap</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Brand identity</div>
+        <div class="card">
+          <div class="card-title">LumiArc</div>
+          <div class="card-sub" style="margin-top: 6px; line-height: 1.7">
+            "Lumi" from Latin — lumen (light) and alumnus (student, literally
+            "one who is nourished"). "Arc" — the trajectory, the path through
+            college from enrollment to graduation. Together: light illuminating
+            the student's arc through college.
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Domain</div>
+            <div class="card-sub">lumiarc.app — purchased on Cloudflare, pointed to Vercel for hosting.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Slogan</div>
+            <div class="card-sub">Lighting the arc to your degree.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Color system</div>
+        <div class="card">
+          <div class="card-title">Brand colors</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #1B2A4A;"></span>Navy 900 — #1B2A4A</span>
+              <span class="row-val">Primary buttons, logo arcs, headers</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #2B4A8C;"></span>Navy 600 — #2B4A8C</span>
+              <span class="row-val">Links, secondary buttons, active states</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #FFD42A;"></span>Gold — #FFD42A</span>
+              <span class="row-val">Logo light beam, brand accent, warning states</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Surfaces</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #A4C8F0;"></span>Sky 300 — #A4C8F0</span>
+              <span class="row-val">Accent borders, progress bars, selected states</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #D4E6F9;"></span>Sky 100 — #D4E6F9</span>
+              <span class="row-val">Card backgrounds, input fields</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #EBF2FC;"></span>Sky 50 — #EBF2FC</span>
+              <span class="row-val">Page background</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #FFF3CC;"></span>Gold light — #FFF3CC</span>
+              <span class="row-val">Highlight surfaces, deadline callouts</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #FFFFFF;"></span>White — #FFFFFF</span>
+              <span class="row-val">Card foregrounds, modals</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Text</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #1B2A4A;"></span>Primary — #1B2A4A</span>
+              <span class="row-val">Headings, body text</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #4A5568;"></span>Secondary — #4A5568</span>
+              <span class="row-val">Descriptions, labels</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #8896A6;"></span>Tertiary — #8896A6</span>
+              <span class="row-val">Placeholders, hints</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #FFFFFF;"></span>Inverse — #FFFFFF</span>
+              <span class="row-val">Text on navy buttons</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Semantic colors</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #639922;"></span><span class="swatch" style="background: #EAF3DE;"></span>Success — #639922 / #EAF3DE</span>
+              <span class="row-val">Completed courses, on track, requirements met</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #FFD42A;"></span><span class="swatch" style="background: #FFF3CC;"></span>Warning — #FFD42A / #FFF3CC</span>
+              <span class="row-val">Approaching deadlines, GPA near threshold</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #E24B4A;"></span><span class="swatch" style="background: #FCEBEB;"></span>Error — #E24B4A / #FCEBEB</span>
+              <span class="row-val">Missed deadlines, SAP violations, at risk</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #2B4A8C;"></span><span class="swatch" style="background: #D4E6F9;"></span>Info — #2B4A8C / #D4E6F9</span>
+              <span class="row-val">In progress, informational callouts</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Borders</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #E2E8F0;"></span>Default — #E2E8F0</span>
+              <span class="row-val">Card borders, dividers</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #CBD5E1;"></span>Hover — #CBD5E1</span>
+              <span class="row-val">Interactive element hover state</span>
+            </div>
+            <div class="row">
+              <span class="row-label"><span class="swatch" style="background: #A4C8F0;"></span>Active — #A4C8F0</span>
+              <span class="row-val">Focus rings, active/selected borders</span>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            The brand gold (#FFD42A) doubles as the warning semantic color.
+            This means the gold accent has functional meaning in the app —
+            it draws the student's eye to deadlines and thresholds, not just
+            decoration. Navy handles authority and action. Pastel sky provides
+            breathing room. Gold appears sparingly for moments that matter.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 2 — PILLARS
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-pillars">
+      <!-- Sub-nav -->
+      <div class="subnav">
+        <div
+          class="subnav-tab sn-teal active"
+          onclick="switchSubnav('academic', this)"
+        >
+          Academic Planning
+        </div>
+        <div
+          class="subnav-tab sn-amber"
+          onclick="switchSubnav('financial', this)"
+        >
+          Financial Aid
+        </div>
+        <div class="subnav-tab sn-coral" onclick="switchSubnav('career', this)">
+          Career Prep
+        </div>
+      </div>
+
+      <!-- ── Academic Planning ── -->
+      <div class="subpage active" id="subpage-academic">
+        <div class="section">
+          <div class="section-title">
+            Onboarding inputs — free for all plans
+          </div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Unofficial transcript</span>
+              <span class="row-val"
+                >LumiArc extracts completed courses, grades, GPA, credits earned.
+                Powers: Degree Overview, GPA Tracker, Checklist (completed
+                side). Re-uploaded each semester.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Degree requirements PDF</span>
+              <span class="row-val"
+                >LumiArc extracts all required courses by category. Powers:
+                Checklist (remaining side), Degree Path, AI course
+                recommendations. Uploaded once, updated if major changes.</span
+              >
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              Uploads are free for every student on every plan. The free/paid
+              line is never about access to your own data — it's about the depth
+              of AI reasoning applied on top of it.
+            </div>
+          </div>
+          <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+            <div class="card-sub" style="color: #633806">
+              AI reads and interprets both documents at upload — handling
+              inconsistent formatting, footnotes, and complex requirement rules
+              that a rules-based parser would break on.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 1 — Where you stand</div>
+          <div class="card">
+            <div class="card-title">Degree Overview</div>
+            <div class="card-sub">
+              At-a-glance view of full degree progress. Credits completed vs.
+              required, broken down by category (GE, major core, upper division,
+              electives). Populated automatically from the two uploads.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">No AI after upload</span>
+              <span class="badge b-green">Simple</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Requirements Checklist</div>
+            <div class="card-sub">
+              Every course required for the degree, organized by category. Each
+              course marked completed, in progress, or remaining. Updates
+              automatically when the student adds or drops a course in the
+              Semester Schedule.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">App logic only</span>
+              <span class="badge b-teal">Normal</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">GPA Tracker</div>
+            <div class="card-sub">
+              A list of current semester courses with editable grade fields. GPA
+              recalculates instantly as the student types — making it a live
+              simulator as well as a tracker. GPA history over time visible as a
+              chart with a visible marker for aid-sensitive thresholds. Student
+              can update any course grade manually at any time throughout the
+              semester.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free — fully available</span>
+              <span class="badge b-gray">No AI — pure calculation</span>
+              <span class="badge b-teal">Normal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 2 — Where you're going</div>
+          <div class="card">
+            <div class="card-title">Semester Schedule</div>
+            <div class="card-sub">
+              A weekly calendar timetable showing courses by day and time. Two
+              build modes: LumiArc suggests courses from remaining requirements, or
+              student inputs courses and asks LumiArc to structure them. Add/drop
+              edits are manual after the session — app logic updates the
+              Checklist automatically. AI available on request for mid-semester
+              changes.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green"
+                >Free — calendar + 7 AI revisions/semester</span
+              >
+              <span class="badge b-purple">Paid — unlimited revisions</span>
+              <span class="badge b-amber">Advanced</span>
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                font-size: 12px;
+                color: var(--color-text-secondary);
+              "
+            >
+              <strong style="color: var(--color-text-primary)"
+                >7-revision limit — how it works:</strong
+              >
+              The free tier gets 7 AI revisions per semester, shared across the
+              full semester. The initial schedule suggestion is free and does
+              not count. Each time LumiArc generates a revised schedule — whether
+              during the initial build or after an add/drop — that counts as one
+              revision. The counter resets at the start of each new semester.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Degree Path</div>
+            <div class="card-sub">
+              A multi-semester view from the student's current position to
+              graduation. Works for 2-year, 4-year, transfer, and part-time
+              paths — not tied to a fixed timeline. Shows how remaining
+              requirements distribute across future semesters. Recalculates
+              automatically when the student's plan changes. More valuable than
+              a counselor's static plan — always current, accessible anytime,
+              handles what-if scenarios instantly.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free — example preview</span>
+              <span class="badge b-purple">Paid — fully available</span>
+              <span class="badge b-coral">Complex</span>
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                font-size: 12px;
+                color: var(--color-text-secondary);
+              "
+            >
+              <strong style="color: var(--color-text-primary)"
+                >Free preview — generated example student:</strong
+              >
+              Free users see a fully generated example Degree Path for a
+              fictional student whose profile mirrors their own — same year,
+              same major, similar target timeline. The example is clearly
+              labeled as fictional (different name, slightly different school
+              and courses) but close enough to be immediately relatable. The
+              upgrade prompt sits directly below: "This is Alex's plan. Want
+              LumiArc to build yours?" The example is generated once with GPT-4.1
+              on first paywall hit, stored, and reused — not regenerated on
+              every visit. This replaces the previous 2-semester cutoff
+              approach, which broke for students in their final year (they
+              would see their entire plan for free). The generated example is
+              consistent for all free users regardless of how close they are
+              to graduation.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Paid only</div>
+          <div class="card">
+            <div class="card-title">Grade Tracker</div>
+            <div class="card-sub">
+              Per-course grade tracking based on syllabus upload and manual
+              grade entry. LumiArc parses the syllabus into a structured grading
+              breakdown — components and weights. Student owns and edits that
+              structure freely and without limit. As grades come in, student
+              enters them manually and LumiArc projects the final grade per course
+              — pure calculation, no AI. Valuable standalone even without
+              cross-pillar features — no setup friction, pre-populated from
+              Semester Schedule, always with the student in the same app.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-purple">Paid</span>
+              <span class="badge b-amber">GPT-4.1 — parse only (one-time)</span>
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                font-size: 12px;
+                color: var(--color-text-secondary);
+              "
+            >
+              <strong style="color: var(--color-text-primary)"
+                >Syllabus upload rules:</strong
+              >
+              1 upload per course, tied to courses in the Semester Schedule
+              only. 2 replacements allowed per semester. Structure editing is
+              always unlimited — replacements are rarely needed since the
+              student can edit the parsed structure directly at any time.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">What-if AI Conversations</div>
+            <div class="card-sub">
+              Student asks LumiArc to reason about grade scenarios and their
+              implications. Cross-pillar when relevant — connecting grade
+              projections to financial aid thresholds, Cal Grant renewal
+              requirements, and SAP. Context injected matches the screen the
+              student is on — only expands to full cross-pillar context when the
+              query genuinely requires it.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-purple">Paid</span>
+              <span class="badge b-amber">Advanced → Complex</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">AI Counselor — query reference</div>
+          <div class="route-table">
+            <div
+              class="route-head"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>Query example</span><span>Tier</span><span>Plan</span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"What does this requirement mean?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Am I on track to graduate on time?"</span>
+              <span><span class="badge b-teal">Normal</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Help me build my semester schedule"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-green">Free (7 revisions)</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"What happens to my aid if my GPA drops?"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"What do I need on my final to keep my Cal Grant?"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Build my full degree path to graduation"</span>
+              <span><span class="badge b-coral">Complex</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">AI Counselor — access model</div>
+          <div class="card">
+            <div class="card-title">Contextual + persistent hybrid</div>
+            <div class="card-sub">
+              LumiArc AI is accessible from every screen via a contextual button.
+              When opened from a specific screen, LumiArc injects only the context
+              relevant to that screen — keeping token costs low and responses
+              focused. The conversation persists across screens, so a student
+              can start on the GPA Tracker, switch to Financial Aid, and
+              continue the same thread. Full cross-pillar context is only loaded
+              when the query genuinely requires it.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Notifications — app logic, no AI</div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Registration opening soon</span
+              ><span class="row-val">Academic calendar from onboarding</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Add/drop deadline approaching</span
+              ><span class="row-val">Academic calendar from onboarding</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Requirements still unplanned</span
+              ><span class="row-val"
+                >Checklist data — triggered when next semester approaches</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">GPA approaching aid threshold</span
+              ><span class="row-val">GPA data + threshold rule</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Time to plan next semester</span
+              ><span class="row-val"
+                >End of current semester, triggers Semester Schedule
+                prompt</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Document parsing — hybrid model</div>
+          <div class="card">
+            <div class="card-title">Why hybrid</div>
+            <div class="card-sub">
+              Degree requirements PDFs are inconsistently formatted — dense
+              paragraphs, footnotes, "choose 2 of 5" rules, co-requisites buried
+              in fine print. No model gets this perfectly right every time. A
+              silent parse that the student never reviews is a trust risk. LumiArc
+              parses, presents, and asks the student to confirm before anything
+              is locked in.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Parsing flow</div>
+            <div class="card-sub">
+              <div
+                class="row"
+                style="
+                  border-bottom: 0.5px solid var(--color-border-tertiary);
+                  padding: 6px 0;
+                "
+              >
+                <span class="row-label">Step 1 — Upload</span>
+                <span class="row-val"
+                  >Student uploads transcript and degree requirements PDF</span
+                >
+              </div>
+              <div
+                class="row"
+                style="
+                  border-bottom: 0.5px solid var(--color-border-tertiary);
+                  padding: 6px 0;
+                "
+              >
+                <span class="row-label">Step 2 — Parse</span>
+                <span class="row-val"
+                  >GPT-4.1 reads both documents and generates structured
+                  Requirement objects. GPT-4.1 is used here — not a lighter
+                  model — because the OR logic, nested rules, and inconsistent
+                  formatting require stronger reasoning. This is a one-time cost
+                  per student.</span
+                >
+              </div>
+              <div
+                class="row"
+                style="
+                  border-bottom: 0.5px solid var(--color-border-tertiary);
+                  padding: 6px 0;
+                "
+              >
+                <span class="row-label">Step 3 — Flag</span>
+                <span class="row-val"
+                  >LumiArc flags anything it couldn't confidently extract: missing
+                  sections, OR choices that need student input, co-requisites,
+                  wrong document detected.</span
+                >
+              </div>
+              <div
+                class="row"
+                style="
+                  border-bottom: 0.5px solid var(--color-border-tertiary);
+                  padding: 6px 0;
+                "
+              >
+                <span class="row-label">Step 4 — Review</span>
+                <span class="row-val"
+                  >Student sees the extracted requirements in plain language,
+                  reviews each section, corrects anything wrong, and confirms.
+                  This is also where OR choices are resolved — "I took MATH 15A,
+                  not CSE 20."</span
+                >
+              </div>
+              <div class="row" style="padding: 6px 0">
+                <span class="row-label">Step 5 — Lock</span>
+                <span class="row-val"
+                  >Confirmed data is locked. Powers the Checklist, Degree Path,
+                  and Semester Schedule from this point forward. Never touched
+                  by the parser again unless the student re-uploads.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+            <div class="card-sub" style="color: #633806">
+              Common flags LumiArc raises during review: missing university-wide
+              requirements not in the PDF, OR choices that need student
+              confirmation, co-requisites that must be taken together, and wrong
+              document uploaded for the declared degree.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Requirement data structure</div>
+          <div class="card">
+            <div class="card-title">Degree</div>
+            <div class="card-sub">
+              Global rules live here once — not repeated on every requirement.
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                padding: 12px 14px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                line-height: 1.8;
+                color: var(--color-text-secondary);
+              "
+            >
+              interface Degree {<br />
+              &nbsp;&nbsp;id: string<br />
+              &nbsp;&nbsp;institution: string<br />
+              &nbsp;&nbsp;name: string<br />
+              &nbsp;&nbsp;catalog_year: number<br />
+              &nbsp;&nbsp;total_units: number<br />
+              &nbsp;&nbsp;constraints: {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;globalGradeMinimum: Grade<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;noDoubleCounting: boolean<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;exceptions: string[]<br />
+              &nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;requirements: Requirement[]<br />
+              }
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Requirement</div>
+            <div class="card-sub">
+              Every requirement in the degree maps to one of these objects.
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                padding: 12px 14px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                line-height: 1.8;
+                color: var(--color-text-secondary);
+              "
+            >
+              interface Requirement {<br />
+              &nbsp;&nbsp;id: string<br />
+              &nbsp;&nbsp;label: string<br />
+              &nbsp;&nbsp;type: RequirementType<br />
+              &nbsp;&nbsp;courses?: string[]<br />
+              &nbsp;&nbsp;options?: Requirement[]<br />
+              &nbsp;&nbsp;rules?: {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;minCourses?: number<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;minUnits?: number<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;from?: string[]<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;mustTakeTogether?: boolean<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;pool?: string<br />
+              &nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;constraints?: {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;minGrade?: Grade<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;level?: CourseLevel<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;noOverlapWith?: string[]<br />
+              &nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;status: RequirementStatus<br />
+              &nbsp;&nbsp;unitsCompleted?: number<br />
+              &nbsp;&nbsp;completedBy?: string<br />
+              }
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Course</div>
+            <div class="card-sub">
+              Individual course record — shared across all requirements.
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                padding: 12px 14px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                line-height: 1.8;
+                color: var(--color-text-secondary);
+              "
+            >
+              interface Course {<br />
+              &nbsp;&nbsp;id: string<br />
+              &nbsp;&nbsp;name: string<br />
+              &nbsp;&nbsp;units: number<br />
+              &nbsp;&nbsp;level: CourseLevel<br />
+              &nbsp;&nbsp;prerequisites: string[]<br />
+              &nbsp;&nbsp;corequisites: string[]<br />
+              &nbsp;&nbsp;offered: Semester[]<br />
+              }
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Enums</div>
+            <div class="card-sub">
+              Constrained value sets used across the interfaces.
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                padding: 12px 14px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                line-height: 1.8;
+                color: var(--color-text-secondary);
+              "
+            >
+              enum RequirementType {<br />
+              &nbsp;&nbsp;ALL
+              <span style="color: #999">// complete every course listed</span
+              ><br />
+              &nbsp;&nbsp;CHOICE
+              <span style="color: #999"
+                >// pick one from a set of alternatives</span
+              ><br />
+              &nbsp;&nbsp;GROUP
+              <span style="color: #999"
+                >// complete min courses/units from a pool</span
+              ><br />
+              &nbsp;&nbsp;COREQUISITE
+              <span style="color: #999">// must be taken together</span><br />
+              &nbsp;&nbsp;OPEN
+              <span style="color: #999">// free elective from a broad pool</span
+              ><br />
+              }<br />
+              <br />
+              enum RequirementStatus {<br />
+              &nbsp;&nbsp;COMPLETE<br />
+              &nbsp;&nbsp;IN_PROGRESS<br />
+              &nbsp;&nbsp;PLANNED<br />
+              &nbsp;&nbsp;REMAINING<br />
+              }<br />
+              <br />
+              enum CourseLevel {<br />
+              &nbsp;&nbsp;LOWER_DIVISION<br />
+              &nbsp;&nbsp;UPPER_DIVISION<br />
+              }<br />
+              <br />
+              enum Semester {<br />
+              &nbsp;&nbsp;FALL<br />
+              &nbsp;&nbsp;WINTER<br />
+              &nbsp;&nbsp;SPRING<br />
+              &nbsp;&nbsp;SUMMER<br />
+              }<br />
+              <br />
+              type Grade =<br />
+              &nbsp;&nbsp;"A+" | "A" | "A-" |<br />
+              &nbsp;&nbsp;"B+" | "B" | "B-" |<br />
+              &nbsp;&nbsp;"C+" | "C" | "C-" |<br />
+              &nbsp;&nbsp;"D+" | "D" | "D-" |<br />
+              &nbsp;&nbsp;"F"
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Accuracy & counselor principle</div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">
+                LumiArc is only as accurate as what goes in
+              </div>
+              <div class="card-sub">
+                Communicated clearly at onboarding and reinforced during the
+                document review step. LumiArc doesn't hide uncertainty — if
+                something looks wrong or incomplete, it says so. The student is
+                always in control of their data.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">
+                LumiArc prepares students for counselors, not replaces them
+              </div>
+              <div class="card-sub">
+                For complex situations — transfers, major changes, petitions —
+                LumiArc surfaces specific questions the student should bring to
+                their counselor. A student who uses LumiArc walks into that
+                appointment knowing exactly what to ask.
+              </div>
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              The counselor nudge is contextual, not a constant disclaimer. LumiArc
+              only suggests "talk to your counselor" when the situation
+              genuinely warrants it — not on every screen as a legal hedge.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Financial Aid ── -->
+      <div class="subpage" id="subpage-financial">
+        <div class="section">
+          <div class="section-title">Onboarding inputs</div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Residency / citizenship status</span>
+              <span class="row-val"
+                >Citizen, permanent resident, DACA, undocumented, F-1/J-1 visa
+                — drives which financial aid features are shown or blocked
+                entirely. FAFSA flow for citizens and permanent residents.
+                California Dream Act Application flow for DACA / AB 540 eligible
+                students. Institutional and private scholarship focus for
+                undocumented students in states without Dream Act provisions.
+                F-1/J-1 students: federal aid features blocked, state grant
+                features blocked, work-study blocked — scholarship uploads,
+                tracking, and targeted international scholarship references
+                fully available. Permanent residents are functionally identical
+                to domestic students for financial aid purposes.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">FAFSA filed status and aid year</span>
+              <span class="row-val"
+                >Whether FAFSA has been filed and for which aid year. Drives
+                deadline alerts and grant eligibility check.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Aid award letter upload</span>
+              <span class="row-val"
+                >Primary onboarding path for financial data. Sonnet parses the
+                letter, extracts grants, loans, work-study allocation, and
+                disbursement schedule. Student reviews and confirms before
+                anything is locked. Free once per aid year — mid-year re-uploads
+                are paid. Same hybrid parse-and-confirm flow as degree
+                requirements.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Scholarship PDF upload</span>
+              <span class="row-val"
+                >Student uploads any scholarship documents they have —
+                brochures, award letters, their own lists. Sonnet parses,
+                extracts structured records, flags missing or ambiguous fields,
+                student confirms. Free with a passive rate limit of 2–3 uploads
+                per month. Virtually no legitimate student hits this limit given
+                only 7–11% of students receive scholarships and most have one or
+                two.</span
+              >
+            </div>
+          </div>
+          <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+            <div class="card-sub" style="color: #633806">
+              LumiArc is only as accurate as what goes in. Both uploads go through
+              the hybrid confirm flow — LumiArc parses and presents, student
+              reviews and corrects, data is locked only after confirmation.
+              Communicated clearly at onboarding.
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              DACA and undocumented students face a fundamentally different
+              financial aid landscape — no federal aid eligibility, state
+              programs vary widely, institutional aid depends entirely on the
+              school. The model knows the general landscape but accuracy risk is
+              higher here than anywhere else in this pillar. Always search for
+              current state program rules before answering, and the counselor
+              nudge is more warranted for these students than anywhere else. A
+              dedicated undocumented student resource center at their school is
+              the most valuable resource LumiArc can point them to.
+            </div>
+          </div>
+          <div class="card" style="background: #e6f1fb; border-color: #b3d4f0">
+            <div class="card-sub" style="color: #0c447c">
+              F-1/J-1 students: all federal and state aid features are blocked
+              at the routing level — LumiArc does not attempt to reason about
+              eligibility it knows doesn't apply. What LumiArc does instead:
+              confirms their status clearly at onboarding, explains what isn't
+              available and why, and routes them to the right resources —
+              their school's international student financial aid office, plus
+              scholarship references filtered for international students (IEFA,
+              institutional international aid pages, private databases without
+              citizenship restrictions). Document uploads and scholarship
+              tracking work identically to domestic students. Award letters for
+              international institutional aid may not include federal fields —
+              the parser extracts what's present and the confirm flow handles
+              gaps.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Aid summary view</div>
+          <div class="card">
+            <div class="card-title">What it shows</div>
+            <div class="card-sub">
+              A single persistent screen showing the student's full financial
+              picture for the current aid year — grants received, loans taken,
+              work-study allocation, total cost of attendance, and the gap
+              between total aid and total cost. Populated automatically from the
+              aid award letter upload. Gives students a clear view of their
+              situation that they currently have to piece together from
+              confusing institutional portals and multiple documents.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">No AI — display only</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Pillar philosophy</div>
+          <div class="grid-3">
+            <div class="card">
+              <div class="card-title">Protect first, optimize second</div>
+              <div class="card-sub">
+                The primary job is making sure students don't lose money they're
+                entitled to — missed deadlines, eligibility lapses, SAP
+                violations. Scholarship matching and optimization are valuable
+                but secondary to not letting the floor fall out.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Translate, don't just inform</div>
+              <div class="card-sub">
+                Every piece of financial aid information should be rendered in
+                plain language with context. Not "your SAI is 1,500" but what
+                that number means, why it matters, and what the student should
+                do about it.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Know the limits and say so</div>
+              <div class="card-sub">
+                Financial aid has edge cases everywhere — appeals, professional
+                judgment, unusual dependency situations, institutional aid with
+                its own rules. LumiArc is confident where rules are clear and
+                explicit about where the student needs their school's financial
+                aid office.
+              </div>
+            </div>
+          </div>
+          <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+            <div class="card-sub" style="color: #633806">
+              This pillar is structurally leaner than academic planning — fewer
+              persistent artifacts, more AI counselor and proactive alerts.
+              That's intentional. Most financial aid interaction is periodic,
+              not daily. The value here is clarity and protection, not constant
+              engagement.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            Where financial aid knowledge comes from
+          </div>
+          <div class="card">
+            <div class="card-title">What the model already knows</div>
+            <div class="card-sub">
+              AI models know federal financial aid well — FAFSA structure, Pell
+              Grant eligibility rules, subsidized vs unsubsidized loans, SAP
+              requirements. This is well-documented public information. For
+              explaining how the system works and general eligibility questions,
+              the model is reliable.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Where accuracy risk is real</div>
+            <div class="card-sub">
+              Three areas require live data — never rely on training data alone.
+              Federal rules that change year to year (exact Pell maximums, SAI
+              thresholds, loan limits). State programs (Cal Grant deadlines,
+              verification requirements change every cycle). Institutional aid
+              (each school has its own scholarships, renewal criteria, appeals
+              process — unreliable in training data for all but large schools).
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              Deadline data is public — every US institution publishes it on
+              their financial aid and registrar pages. The problem is not
+              availability, it's maintenance at scale. LumiArc solves this with
+              on-demand web search rather than a maintained database. See
+              Decision 4.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Features — model routing and approach</div>
+          <div class="card">
+            <div class="card-title">FAFSA deadline alerts</div>
+            <div class="card-sub">
+              App logic only. LumiArc knows the student's state and school from
+              onboarding. A Supabase Edge Function runs on schedule, searches
+              for current deadlines from official sources, and fires a push
+              notification when a threshold is crossed. No AI call for the alert
+              itself. AI only gets involved if the student asks a follow-up
+              question.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span
+              ><span class="badge b-gray">App logic + scheduled search</span
+              ><span class="badge b-green">Simple</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Grant eligibility check</div>
+            <div class="card-sub">
+              LumiArc reasons over the student's profile — SAI, enrollment status,
+              state, dependency status — against federal and state eligibility
+              rules. For state grants like Cal Grant, Layer 3 fetches current
+              thresholds before the AI call. Output is a clear eligible / likely
+              eligible / unlikely with the reasoning shown and source cited.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span
+              ><span class="badge b-teal">DeepSeek V3.2</span
+              ><span class="badge b-teal">Normal</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Scholarship references</div>
+            <div class="card-sub">
+              LumiArc provides a personalized set of links to find scholarships —
+              not matching, but triage. A CS student at UCSD gets the Jacobs
+              School engineering scholarship page, not the generic financial aid
+              homepage. A first-gen student gets first-gen specific resources.
+              References come from a curated list filtered against the student's
+              profile. LumiArc is honest that it's pointing to doors, not opening
+              them.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span
+              ><span class="badge b-green">Gemini Flash</span
+              ><span class="badge b-green">Simple</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Scholarship upload and tracking</div>
+            <div class="card-sub">
+              Student uploads a scholarship document — PDF, brochure, their own
+              list. LumiArc parses it with GPT-4.1 (same hybrid model as degree
+              requirements), extracts structured records, flags missing fields,
+              and the student confirms before anything is locked. Once
+              confirmed, app logic handles deadline tracking and status updates.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free — upload + tracking</span>
+              <span class="badge b-amber"
+                >GPT-4.1 — parse only (one-time)</span
+              >
+              <span class="badge b-amber">Advanced</span>
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: var(--color-background-secondary);
+                border-radius: var(--border-radius-md);
+                font-size: 12px;
+                color: var(--color-text-secondary);
+              "
+            >
+              <strong style="color: var(--color-text-primary)"
+                >Scholarship record fields LumiArc extracts:</strong
+              >
+              Name and provider, award amount, eligibility criteria, application
+              deadline, required materials, application status, renewal
+              conditions.
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: #faeeda;
+                border-radius: var(--border-radius-md);
+                font-size: 12px;
+                color: #633806;
+              "
+            >
+              <strong style="color: #412402">Limitations LumiArc flags:</strong>
+              Uploaded documents may be outdated — LumiArc flags the document date
+              if detectable and reminds the student to verify current amounts
+              and deadlines directly with the source. Eligibility criteria
+              extracted from a PDF may be incomplete or ambiguous — LumiArc flags
+              uncertain fields and asks the student to confirm. Award amounts
+              change year to year. If a scholarship routes through the school's
+              financial aid office, LumiArc flags this as a separate process the
+              student needs to coordinate directly. Complex stacking of multiple
+              scholarships warrants a counselor nudge — institutional aid
+              stacking rules are school-specific and LumiArc won't guess.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Loan tracker</div>
+            <div class="card-sub">
+              Student inputs loan data during onboarding or uploads their aid
+              award letter. LumiArc displays a clear breakdown — subsidized vs
+              unsubsidized, amounts, disbursement schedule, cumulative debt. App
+              logic handles the display. AI called at Normal tier if the student
+              asks about implications, repayment, or what a term means.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span
+              ><span class="badge b-teal">DeepSeek V3.2 — on question</span
+              ><span class="badge b-teal">Normal</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Work-study matching</div>
+            <div class="card-sub">
+              True job matching requires a live integration with each school's
+              student employment board — not feasible for MVP. LumiArc confirms
+              eligibility from the student's profile, explains what work-study
+              actually is (wages earned through part-time work, not automatic
+              cash), and links directly to the school's student employment
+              portal.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span
+              ><span class="badge b-green">Gemini Flash</span
+              ><span class="badge b-green">Simple</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Aid health check</div>
+            <div class="card-sub">
+              Monitors GPA against SAP thresholds, enrollment status, FAFSA
+              renewal timing, loan limits, and cross-references against the
+              student's full aid package. Monitoring is app logic — flags
+              trigger automatically. When a flag fires, LumiArc explains the full
+              risk across all affected pillars — what's at risk, why, what the
+              student needs to do, and in what order. GPA data flows in from the
+              academic pillar via transcript re-upload each semester.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green"
+                >Free — monitoring, alerts, and full explanation</span
+              >
+              <span class="badge b-amber">GPT-4.1 — on flag</span>
+              <span class="badge b-amber">Advanced</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">AI counselor</div>
+            <div class="card-sub">
+              Available from every screen in the financial aid pillar. Answers
+              questions about aid, eligibility, deadlines, and implications.
+              Context injected matches the screen the student is on. Limited
+              conversations per month on free tier — unlimited on paid.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green"
+                >Free — limited conversations per month</span
+              >
+              <span class="badge b-purple">Paid — unlimited</span>
+              <span class="badge b-green">Simple</span>
+              <span class="badge b-teal">→ Complex</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">AI counselor — query reference</div>
+          <div class="route-table">
+            <div
+              class="route-head"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>Query example</span><span>Tier</span><span>Model</span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"When does FAFSA open?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Flash</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"What is a subsidized loan?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Flash</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Am I eligible for Cal Grant?"</span>
+              <span><span class="badge b-teal">Normal</span></span>
+              <span><span class="badge b-teal">DeepSeek</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Where can I find UCSD scholarships?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Flash</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"Should I drop this class given my aid?"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-amber">GPT-4.1</span></span>
+            </div>
+            <div
+              class="route-row"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>"What am I at risk of losing and why?"</span>
+              <span><span class="badge b-coral">Complex</span></span>
+              <span><span class="badge b-coral">GPT-5</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ongoing manual updates</div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Scholarship status updates</span
+              ><span class="row-val"
+                >Student updates application status as it changes — applied,
+                submitted, awarded, rejected. Manual, student-driven.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">New scholarships found</span
+              ><span class="row-val"
+                >Student uploads new scholarship documents as they find them
+                throughout the year.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Grant changes at renewal</span
+              ><span class="row-val"
+                >If a grant is reduced or lost at renewal, student updates their
+                aid records manually. LumiArc prompts this at the start of each aid
+                year.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Additional loans mid-year</span
+              ><span class="row-val"
+                >If student takes on an additional loan, manually added to the
+                loan tracker.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Aid award letter re-upload</span
+              ><span class="row-val"
+                >Each new academic year, student re-uploads their updated award
+                letter. LumiArc prompts this when the new aid year begins. Free
+                once per aid year — mid-year re-uploads are paid.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">FAFSA renewal confirmation</span
+              ><span class="row-val"
+                >October 1 each year — LumiArc reminds student to renew FAFSA and
+                confirm once filed.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">GPA updates</span
+              ><span class="row-val"
+                >GPA flows into the aid health check automatically from the
+                academic pillar via transcript re-upload each semester. No
+                separate update needed in the financial pillar.</span
+              >
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              LumiArc prompts updates at natural moments rather than waiting for
+              the student to remember — start of each aid year, after award
+              letters arrive, after any major academic change. The accuracy of
+              this pillar depends on the student keeping their data current.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Proactive alerts — app logic, no AI</div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">FAFSA deadline approaching</span
+              ><span class="row-val"
+                >Background search fetches current deadline from studentaid.gov
+                — fires at 30, 14, and 7 days out</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">State grant deadline approaching</span
+              ><span class="row-val"
+                >Background search fetches from state aid commission (e.g. CSAC
+                for Cal Grant) — same cadence</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Scholarship deadline approaching</span
+              ><span class="row-val"
+                >From confirmed scholarship records — fires at 14 and 3 days
+                out</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">GPA approaching SAP threshold</span
+              ><span class="row-val"
+                >GPA data + SAP minimum from student profile — triggers aid
+                health check prompt</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Enrollment drop detected</span
+              ><span class="row-val"
+                >If student drops below full-time, flag potential aid
+                eligibility impact</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">FAFSA renewal window open</span
+              ><span class="row-val"
+                >October 1 each year — remind student to renew for next aid
+                year</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Backend infrastructure</div>
+          <div class="card">
+            <div class="card-title">Supabase handles everything</div>
+            <div class="card-sub">
+              All financial aid backend logic runs on Supabase — PostgreSQL
+              database for student aid profiles and scholarship records, Edge
+              Functions for scheduled background searches and alert logic, and
+              push notifications triggered directly from Edge Functions via
+              Expo's push notification API. No separate server or Firebase
+              needed. One service, one bill.
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              The main cost variable at scale is AI model API calls, not
+              infrastructure. Supabase free tier covers early development. Pro
+              tier is $25/month flat when LumiArc outgrows it.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end subpage-financial -->
+
+      <!-- ── Career Prep ── -->
+      <div class="subpage" id="subpage-career">
+
+        <div class="section">
+          <div class="section-title">Onboarding inputs</div>
+          <div class="card">
+            <div class="card-sub">
+              The career pillar runs almost entirely off data already collected
+              at onboarding — target role, graduation timeline, year, major,
+              and institution. One additional input is specific to this pillar.
+            </div>
+          </div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Resume upload</span>
+              <span class="row-val">
+                Optional at onboarding — the pillar works without it, but
+                resume feedback and career roadmap gap analysis both require
+                it. PDF or Word doc. Upload is free with no replacement limit —
+                resumes change constantly and re-parsing on replacement is
+                cheap (one GPT-4.1 call per upload, same as a syllabus).
+                Parsed at feedback time, not at upload. The free/paid line is
+                drawn at reasoning depth, not upload access.
+              </span>
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              No upload limits on either plan. The cost argument for limiting
+              uploads doesn't hold — parsing is ~$0.02–0.05 per resume.
+              Artificially limiting re-uploads creates friction on the one
+              action you most want students to take (keeping their resume
+              current in LumiArc). The wall is at reasoning depth, not at the
+              upload gate.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 1 — Awareness (Free)</div>
+          <div class="card">
+            <div class="card-title">Career fair calendar</div>
+            <div class="card-sub">
+              A list of upcoming career fairs at the student's institution —
+              on-campus, virtual, and industry-specific where relevant.
+              Populated by a scheduled background search against the student's
+              school career center page and Handshake (same Supabase Edge
+              Function pattern as FAFSA deadline alerts). App logic handles
+              display and deadline notifications at 7 and 2 days out. No AI
+              for the calendar itself — AI only gets involved if the student
+              asks a follow-up question like "which of these should I
+              prioritize?" Some fairs require Handshake login to register —
+              LumiArc shows the event and links to the career center page; it
+              cannot deep-link to registration for all schools. If the
+              background search returns nothing reliable, LumiArc defaults to
+              linking directly to the school's career center.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">App logic + scheduled search</span>
+              <span class="badge b-green">Simple</span>
+              <span class="badge b-green">Gemini Flash — on follow-up</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Internship deadlines</div>
+            <div class="card-sub">
+              Application deadlines for major programs relevant to the
+              student's target role and year. Not a comprehensive job board —
+              a curated shortlist of high-signal programs filtered by the
+              student's profile (e.g. Google STEP, Meta University, Microsoft
+              Explore for CS students; equivalent programs by industry for
+              other majors). Background search keeps them current from
+              official company career pages. Same alert cadence as FAFSA
+              deadline alerts — fires at 30, 14, and 7 days out. LumiArc sticks
+              to programs it can reliably track; it does not attempt to cover
+              the long tail of smaller programs where accuracy risk is higher.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">App logic + scheduled search</span>
+              <span class="badge b-green">Simple</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Internship finder</div>
+            <div class="card-sub">
+              Curated reference links filtered by the student's major, target
+              role, and school. Not a job board — LumiArc points to the right
+              doors. A CS student targeting SWE internships at UCSD gets:
+              their school's Handshake portal (always first, school-specific
+              URL), the UCSD CSE department recruiting page, Jobright,
+              Simplify, and the community-maintained GitHub internship list
+              (e.g. pittcsc/Summer2026-Internships). A Finance major targeting
+              investment banking gets: Handshake, their school's
+              finance/business career center, Wall Street Oasis job board, and
+              a filtered LinkedIn Early Career link. A Biology major targeting
+              research gets: Handshake, NIH SURF, NSF REU finder, and their
+              school's undergraduate research office. The referral map is a
+              curated static list filtered by major + role type — no API
+              calls, no search, no maintenance beyond occasional link checks.
+              LumiArc frames it honestly: "Here's where [major] students at
+              [school] typically find [role] internships." Free only — a paid
+              internship finder using a live API (e.g. JSearch) is a post-MVP
+              consideration once there's usage data on whether students want
+              LumiArc to surface listings vs. just pointing them to the right
+              places.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free</span>
+              <span class="badge b-gray">Static curated map — no API</span>
+              <span class="badge b-green">Simple</span>
+              <span class="badge b-green">Gemini Flash — on follow-up</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 2 — Resume feedback</div>
+          <div class="card">
+            <div class="card-title">Two-pass model</div>
+            <div class="card-sub">
+              Resume feedback is the highest-priority feature in this pillar
+              and the clearest demonstration of LumiArc's value over generic
+              resume tools. The competitive moat is context — LumiArc knows the
+              student's major, target role, year, and internship timeline.
+              A score anyone can get elsewhere for free; contextualized
+              feedback tied to the student's specific situation is what LumiArc
+              uniquely provides.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Pass 1 — Structured review</div>
+            <div class="card-sub">
+              Triggered at upload. GPT-4.1 parses the resume and generates a
+              structured score (0–100) and section-level grades across:
+              impact (quantified achievements), experience (relevance to target
+              role), skills (keyword coverage for the target role), and
+              formatting (ATS compatibility, readability). Output is stored —
+              not re-run unless the resume is replaced. Cost is one GPT-4.1
+              call per upload (~$0.02–0.05).
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free — score + section grades</span>
+              <span class="badge b-amber">GPT-4.1 — parse only (one-time)</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Pass 2 — Contextual reasoning</div>
+            <div class="card-sub">
+              On-demand when the student asks a follow-up. LumiArc reasons against
+              both the parsed resume structure and the student's full profile.
+              Examples: "What's the weakest section?", "How would this read to
+              a Google recruiter?", "What's missing for a PM role?" LumiArc can
+              rewrite weak bullets on request, tailor feedback to target
+              company tier, and answer follow-up questions in conversation.
+              A CS sophomore targeting a summer 2026 SWE internship gets
+              different feedback than a senior targeting a PM role at a
+              startup. This is the feature that earns its place — a first-gen
+              student who has never had their resume reviewed by anyone in the
+              industry gets feedback a counselor appointment might not deliver.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-purple">Paid</span>
+              <span class="badge b-amber">GPT-4.1 → GPT-5</span>
+              <span class="badge b-amber">Advanced</span>
+            </div>
+          </div>
+          <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+            <div class="card-sub" style="color: #633806">
+              The free/paid split on resume feedback is the acquisition hook
+              for this pillar. The student uploads their resume, gets a score,
+              sees a section is weak, and hits the wall when they try to
+              understand why. Same conversion logic as the Degree Path and
+              Career Roadmap example previews — they see that something needs
+              fixing but the actionable detail is one payment away.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 3 — Career roadmap (Paid)</div>
+          <div class="card">
+            <div class="card-title">What it is</div>
+            <div class="card-sub">
+              The Complex-tier feature for this pillar. Structurally analogous
+              to Degree Path — a multi-semester view, always current, handles
+              what-if scenarios. The primary upgrade moment for Career Prep.
+              LumiArc reasons over three inputs: the student's current state
+              (year, major, completed coursework, internship history, resume),
+              their target role (job title, company tier, timeline), and what
+              that role actually requires (skills, experience signals,
+              credential expectations). Output has two parts: a gap analysis
+              and a semester-by-semester action plan.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-purple">Paid</span>
+              <span class="badge b-coral">GPT-5</span>
+              <span class="badge b-coral">Complex</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Gap analysis</div>
+            <div class="card-sub">
+              A clear, specific comparison of where the student is versus what
+              their target role requires. Not generic ("you need leadership
+              experience") — tied to their actual profile ("you have no
+              industry experience yet, your CS coursework is on track but
+              you're missing a data structures course that often appears in
+              SWE interview loops, and your resume has no projects listed").
+              Structured breakdown by category: technical skills, experience
+              signals, credentials, timeline.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Semester-by-semester action plan</div>
+            <div class="card-sub">
+              Starting from the student's current semester, LumiArc maps what
+              needs to happen each semester to close the gap by the target
+              date. Covers: which courses to prioritize, when to apply for
+              internships (and which programs by application cycle), when to
+              build projects or complete certifications, when to start
+              recruiting prep. Recalculates when the student's plan changes —
+              same always-current principle as Degree Path.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Cross-pillar connections</div>
+            <div class="card-sub">
+              The roadmap is where Career Prep intersects most clearly with
+              the other pillars. Course selection connects to the academic
+              checklist and degree path. Internship application timing
+              connects to financial aid (work-study, scholarship deadlines
+              that overlap with recruiting season). LumiArc surfaces these
+              connections explicitly in the roadmap output rather than
+              treating career planning as isolated.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Free preview — generated example student</div>
+            <div class="card-sub">
+              Free users see a fully generated example Career Roadmap for a
+              fictional student whose profile mirrors their own — same year,
+              same major, similar target role and timeline. The example is
+              clearly labeled as fictional (different name, slightly different
+              school and background) but close enough to be immediately
+              relatable. The upgrade prompt sits directly below: "This is
+              Alex's plan. Want LumiArc to build yours?" Generated once with
+              GPT-4.1 on first paywall hit, stored and reused. Same pattern
+              as the Degree Path example preview — consistent for all free
+              users regardless of how far along they are.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-green">Free — example preview only</span>
+              <span class="badge b-amber">GPT-4.1 — generated once</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Group 4 — Interview prep (Paid)</div>
+          <div class="card">
+            <div class="card-title">What it is</div>
+            <div class="card-sub">
+              Positioned after resume feedback in the student's natural
+              workflow — resume first, then interview. LumiArc generates
+              role-specific practice questions based on the student's target
+              role, company tier, and internship level. Not a generic question
+              bank — questions are drawn from actual interview patterns for
+              that role type. The student answers in conversation, LumiArc
+              evaluates the response and gives specific feedback: what landed,
+              what was weak, what a strong version looks like.
+            </div>
+            <div
+              style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap"
+            >
+              <span class="badge b-purple">Paid</span>
+              <span class="badge b-amber">GPT-4.1</span>
+              <span class="badge b-amber">Advanced</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Two modes</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">Behavioral prep</span>
+                <span class="row-val">STAR-format practice for the
+                behavioral round. Questions relevant to the student's actual
+                background — not asking about managing a team when the student
+                has no leadership experience listed. Feedback focuses on
+                specificity, structure, and narrative clarity.</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Technical / role-specific prep</span>
+                <span class="row-val">For SWE internships: CS fundamentals
+                and coding patterns — not a full LeetCode replacement, but
+                enough to surface gaps and build confidence. For PM roles:
+                product sense and estimation. For other roles: adapted
+                accordingly. LumiArc is honest about scope — deep technical
+                interview prep is its own discipline and LumiArc is a starting
+                point, not a replacement for dedicated prep tools.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">AI Counselor — query reference</div>
+          <div class="route-table">
+            <div
+              class="route-head"
+              style="grid-template-columns: 1fr 80px 100px"
+            >
+              <span>Query example</span><span>Tier</span><span>Plan</span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"When is the Google STEP deadline?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"Where do I find CS internships at UCSD?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"What's my resume score?"</span>
+              <span><span class="badge b-green">Simple</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"Which career fairs should I attend?"</span>
+              <span><span class="badge b-teal">Normal</span></span>
+              <span><span class="badge b-green">Free</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"What's weak about my resume for a PM role?"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"Am I on track for a SWE internship by summer 2026?"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"Build my career roadmap to a Google SWE offer"</span>
+              <span><span class="badge b-coral">Complex</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+            <div class="route-row" style="grid-template-columns: 1fr 80px 100px">
+              <span>"Run me through a mock behavioral interview"</span>
+              <span><span class="badge b-amber">Advanced</span></span>
+              <span><span class="badge b-purple">Paid</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Notifications — app logic, no AI</div>
+          <div class="card">
+            <div class="row">
+              <span class="row-label">Career fair in 7 days</span>
+              <span class="row-val">At the student's school — from background search</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Career fair in 2 days</span>
+              <span class="row-val">"Are you going?" — reinforcement nudge</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Internship application opens</span>
+              <span class="row-val">30 days before — e.g. "Google STEP applications open in 30 days"</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Internship deadline approaching</span>
+              <span class="row-val">14 and 7 days out — from curated deadline list</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Resume not updated</span>
+              <span class="row-val">Fires when internship season approaches and resume hasn't been replaced in 60+ days</span>
+            </div>
+            <div class="row">
+              <span class="row-label">Career roadmap task due this semester</span>
+              <span class="row-val">Paid only — if a roadmap action item is unstarted and the semester is underway</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Free / paid summary</div>
+          <div class="card">
+            <div class="card-sub">
+              The free/paid line follows the same principle as the academic
+              pillar: depth of AI reasoning, not data access. Uploads are
+              always free. The wall is at what LumiArc does with the data.
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">Free</div>
+              <div class="card-sub">
+                Career fair calendar, internship deadlines, internship finder
+                links, resume score and section grades (Pass 1), generated
+                example preview of Career Roadmap. Basic AI counselor for
+                Simple and Normal tier career questions.
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Paid</div>
+              <div class="card-sub">
+                Resume reasoning and follow-up conversation (Pass 2), full
+                Career Roadmap with gap analysis and multi-semester action
+                plan, interview prep (behavioral + technical), full AI
+                counselor for Advanced and Complex career questions.
+              </div>
+            </div>
+          </div>
+          <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+            <div class="card-sub" style="color: #27500a">
+              The resume score is the acquisition hook for this pillar —
+              the student uploads their resume, gets a score, sees something
+              is weak, and hits the wall when they try to understand why.
+              The career roadmap example preview is the upgrade moment —
+              the student sees a detailed plan for a student just like them
+              and wants that for themselves. Both moments are high-intent
+              and naturally timed to when the student is most motivated.
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end subpage-career -->
+    </div>
+    <!-- end tab-pillars -->
+
+    <!-- ══════════════════════════════════════════════
+     TAB — MODEL ARCHITECTURE
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-models">
+      <div class="section">
+        <div class="section-title">Interaction complexity tiers</div>
+        <div class="route-table">
+          <div class="route-head">
+            <span>Tier</span><span>What the AI does</span
+            ><span>Example query</span><span>Model</span>
+          </div>
+          <div class="route-row">
+            <span><span class="badge b-green">Simple</span></span>
+            <span>Single fact, no context, instant answer</span>
+            <span>"When does FAFSA open?"</span>
+            <span><span class="badge b-green">Gemini Flash</span></span>
+          </div>
+          <div class="route-row">
+            <span><span class="badge b-teal">Normal</span></span>
+            <span>Uses student profile, 1–2 step reasoning</span>
+            <span>"Am I eligible for Cal Grant?"</span>
+            <span><span class="badge b-teal">DeepSeek V3.2</span></span>
+          </div>
+          <div class="route-row">
+            <span><span class="badge b-amber">Advanced</span></span>
+            <span>Weighs tradeoffs, multi-topic, generates plan</span>
+            <span>"Should I drop CSE 101?"</span>
+            <span><span class="badge b-amber">GPT-4.1</span></span>
+          </div>
+          <div class="route-row">
+            <span><span class="badge b-coral">Complex</span></span>
+            <span>Full profile synthesis, long output, live data</span>
+            <span>"Build my 4-year plan"</span>
+            <span><span class="badge b-coral">GPT-5</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Tier definitions</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">
+              <span class="badge b-green">Simple</span>
+            </div>
+            <div class="card-sub" style="margin-top: 6px">
+              No profile lookup needed. Answer is a publicly-known fact or date.
+              One-sentence response expected.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <span class="badge b-teal">Normal</span>
+            </div>
+            <div class="card-sub" style="margin-top: 6px">
+              Profile is required to answer correctly. Limited reasoning steps.
+              Short structured response.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <span class="badge b-amber">Advanced</span>
+            </div>
+            <div class="card-sub" style="margin-top: 6px">
+              Query spans multiple pillars, or requires weighing competing
+              factors. Multi-paragraph with clear recommendation.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <span class="badge b-coral">Complex</span>
+            </div>
+            <div class="card-sub" style="margin-top: 6px">
+              Requires synthesis of full profile, possibly live data, long-form
+              output. Expensive — only trigger when genuinely needed.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Optimized routing stack</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Gemini Flash — Simple tier</div>
+            <div class="card-sub">
+              Google. $0.15 / $0.60 per 1M tokens (input/output). Cheapest
+              viable model for single-fact lookups. Handles ~30% of all queries.
+              No profile injection needed.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">DeepSeek V3.2 — Normal tier</div>
+            <div class="card-sub">
+              DeepSeek. $0.28 / $0.42 per 1M tokens. Highest-volume tier (~40%
+              of all queries). 128K context, 8K max output. Handles eligibility
+              checks, requirement explanations, GPA questions. 90% cheaper than
+              Claude Haiku at this tier.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">GPT-4.1 — Advanced tier + Parsing</div>
+            <div class="card-sub">
+              OpenAI. $2.00 / $8.00 per 1M tokens. Multi-pillar reasoning,
+              schedule building, tradeoff analysis. Also used for all document
+              parsing (transcripts, degree PDFs, syllabi). ~45% cheaper than
+              Claude Sonnet on output.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">GPT-5 — Complex tier</div>
+            <div class="card-sub">
+              OpenAI. $1.25 / $10.00 per 1M tokens. Full degree path generation,
+              comprehensive aid analysis, cross-pillar synthesis. Fires rarely
+              (~2% of queries). ~60% cheaper than Claude Opus.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Stack strategy</div>
+        <div class="card">
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label">All stages</span
+              ><span class="row-val"
+                >Use the optimized multi-provider stack from day one. Prompts
+                are tuned for the models they'll actually run on in
+                production — no re-validation needed later. Costs are
+                negligible at early scale ($5–30/mo).</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Prompt caching</span
+              ><span class="row-val"
+                >Enabled from day one. Layers 1 + 4 (~1,200 tokens of static
+                prompt) are identical across every call for every user —
+                perfect cache candidates. Saves 30–35% on input token costs.
+                The dollar impact grows with scale but costs nothing to enable
+                early.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            The stack is provider-agnostic. LumiArc's prompt layers (persona,
+            student context, live data, behaviour rules) work across any model.
+            No vendor lock-in. Swap models as pricing changes or better options
+            emerge — the routing tier structure stays the same.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Query volume distribution</div>
+        <div class="card">
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label">Simple (Flash)</span
+              ><span class="row-val"
+                >~30% of queries. Deadline lookups, definitions, simple facts.
+                Near-zero cost.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Normal (DeepSeek)</span
+              ><span class="row-val"
+                >~40% of queries. Eligibility checks, requirement questions, GPA
+                tracking. Low cost.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Advanced (GPT-4.1)</span
+              ><span class="row-val"
+                >~25% of queries. Schedule building, what-if scenarios,
+                cross-pillar reasoning. Moderate cost. Most are paid-tier
+                features.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Complex (GPT-5)</span
+              ><span class="row-val"
+                >~5% of queries. Full degree path, comprehensive aid review.
+                Highest cost per call but fires rarely. Paid-only.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+          <div class="card-sub" style="color: #633806">
+            ~70% of all queries route to Flash or DeepSeek at combined cost
+            under $0.60 per million tokens. The expensive models handle ~30% of
+            queries but account for ~90% of AI spend. The routing tiers exist
+            specifically to keep this ratio healthy.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 3 — PROMPT ENGINEERING
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-prompts">
+      <div class="section">
+        <div class="section-title">Assembly order</div>
+        <div class="assembly">
+          <div class="asm-row">
+            <span class="asm-arrow">①</span>
+            <span class="asm-label" style="color: #3c3489"
+              >Layer 1 — Persona &amp; Role</span
+            >
+            <span class="asm-note">Static · written once · every call</span>
+          </div>
+          <div class="asm-row">
+            <span class="asm-arrow">②</span>
+            <span class="asm-label" style="color: #085041"
+              >Layer 2 — Student Context</span
+            >
+            <span class="asm-note">Per-user · injected from database</span>
+          </div>
+          <div class="asm-row">
+            <span class="asm-arrow">③</span>
+            <span class="asm-label" style="color: #633806"
+              >Layer 3 — Live Data</span
+            >
+            <span class="asm-note"
+              >Per-query · web search · only when relevant</span
+            >
+          </div>
+          <div class="asm-row">
+            <span class="asm-arrow">④</span>
+            <span class="asm-label" style="color: #712b13"
+              >Layer 4 — Behaviour Rules</span
+            >
+            <span class="asm-note">Static · tuned over time</span>
+          </div>
+          <div class="asm-row">
+            <span class="asm-arrow">⑤</span>
+            <span class="asm-label" style="color: #555"
+              >Layer 5 — User Message</span
+            >
+            <span class="asm-note"
+              >Per-query · raw student input · always last</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Layer detail — click to expand</div>
+        <div class="pb">
+          <div class="layer l1">
+            <div class="layer-head" onclick="toggleLayer(this)">
+              <span>Layer 1 — Persona &amp; role</span>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span class="badge">Static · every call</span>
+                <span class="toggle">▾</span>
+              </div>
+            </div>
+            <div class="layer-body">
+              <pre><span class="comment"># ROLE</span>
+You are LumiArc, an AI academic advisor
+for college students. You help with three areas:
+academic planning, financial aid, and career prep.
+
+<span class="comment"># WHAT YOU ARE</span>
+You are a knowledgeable, warm, and direct advisor.
+You communicate like a trusted older peer who has
+been through the system — not a formal counselor.
+You never talk down to students.
+
+<span class="comment"># WHAT YOU ARE NOT</span>
+You are not a therapist. You are not a lawyer.
+You are not a financial advisor.
+If a question falls outside your scope, say so
+clearly and point to the right resource.</pre>
+              <div class="note">
+                This never changes. It defines the voice, scope, and limits of
+                LumiArc for every student, every session. Do not modify based on
+                the query.
+              </div>
+            </div>
+          </div>
+
+          <div class="layer l2">
+            <div class="layer-head" onclick="toggleLayer(this)">
+              <span>Layer 2 — Student context</span>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span class="badge">Per-user · from profile</span>
+                <span class="toggle">▾</span>
+              </div>
+            </div>
+            <div class="layer-body">
+              <pre><span class="comment"># STUDENT PROFILE</span>
+<span class="key">Name:</span>            <span class="val">Marcus</span>
+<span class="key">Institution:</span>     <span class="val">UC San Diego (UCSD)</span>
+<span class="key">Country:</span>         <span class="val">United States</span>
+<span class="key">State:</span>           <span class="val">California</span>
+<span class="key">Year:</span>            <span class="val">Sophomore (2nd year)</span>
+<span class="key">Enrollment:</span>     <span class="val">Full-time</span>
+<span class="key">Major:</span>           <span class="val">Computer Science (B.S.)</span>
+<span class="key">Credits earned:</span>  <span class="val">54 of 180 required</span>
+<span class="key">GPA:</span>             <span class="val">3.4</span>
+<span class="key">Student type:</span>    <span class="val">First-generation, domestic, dependent</span>
+
+<span class="comment"># FINANCIAL AID STATUS</span>
+<span class="key">FAFSA filed:</span>     <span class="val">Yes (2025-26)</span>
+<span class="key">Pell Grant:</span>      <span class="val">$7,395/year</span>
+<span class="key">Cal Grant A:</span>     <span class="val">$9,358/year (needs GPA verification)</span>
+<span class="key">Loans:</span>           <span class="val">$5,500 subsidized this year</span>
+<span class="key">Work-study:</span>      <span class="val">Eligible, not yet claimed</span>
+
+<span class="comment"># ACADEMIC PROGRESS</span>
+<span class="key">Completed reqs:</span>  <span class="val">GE Writing, Calculus I &amp; II, CSE 11</span>
+<span class="key">Remaining reqs:</span>  <span class="val">CSE 12, 15L, 21, 30, 100, 101, + 8 more</span>
+<span class="key">On track:</span>        <span class="val">Yes — projected graduation June 2027</span>
+
+<span class="comment"># CAREER GOALS</span>
+<span class="key">Target role:</span>     <span class="val">Software engineer (industry)</span>
+<span class="key">Target timeline:</span> <span class="val">Full-time after graduation 2027</span>
+<span class="key">Internships:</span>     <span class="val">None yet — actively seeking summer 2026</span></pre>
+              <div class="note">
+                Always inject the full profile. Never summarize or trim — LumiArc
+                needs the full picture to catch cross-pillar implications. The
+                structure is identical for every student; only the values
+                change.
+              </div>
+            </div>
+          </div>
+
+          <div class="layer l3">
+            <div class="layer-head" onclick="toggleLayer(this)">
+              <span>Layer 3 — Live data</span>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span class="badge">Per-query · web search</span>
+                <span class="toggle">▾</span>
+              </div>
+            </div>
+            <div class="layer-body">
+              <pre><span class="comment"># LIVE DATA (fetched at query time)</span>
+<span class="comment"># Only included when relevant to the query topic</span>
+
+<span class="key">FAFSA 2026-27 federal deadline:</span>  <span class="val">June 30, 2026</span>
+<span class="key">Cal Grant GPA verification due:</span>  <span class="val">March 2, 2026</span>
+<span class="key">UCSD spring reg opens:</span>           <span class="val">February 18, 2026</span>
+<span class="key">UCSD spring reg closes:</span>          <span class="val">March 25, 2026</span>
+<span class="key">Google STEP app deadline:</span>        <span class="val">April 5, 2026</span>
+
+<span class="comment"># SOURCE VERIFICATION</span>
+<span class="key">Data retrieved from:</span> <span class="val">studentaid.gov, ucsd.edu/registrar,</span>
+                        <span class="val">careers.google.com — March 18 2026</span>
+<span class="warn">Note: Always cite source in your response.
+If data age exceeds 48hrs, flag to student.</span></pre>
+              <div class="note">
+                Only populate fields relevant to what the student asked. A
+                question about internships should not fetch FAFSA data. This
+                keeps token cost low and context sharp. Omit this layer entirely
+                for Simple tier queries.
+              </div>
+            </div>
+          </div>
+
+          <div class="layer l4">
+            <div class="layer-head" onclick="toggleLayer(this)">
+              <span>Layer 4 — Behaviour rules</span>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span class="badge">Static · tuned over time</span>
+                <span class="toggle">▾</span>
+              </div>
+            </div>
+            <div class="layer-body">
+              <pre><span class="comment"># ACCURACY RULES</span>
+- NEVER state a deadline without citing a source
+- If you are not certain, say: "Based on [source],
+  but verify directly at [url]"
+- Dates and dollar amounts require source citation
+- If live data was not fetched, say so and direct
+  the student to the official source
+
+<span class="comment"># TONE RULES</span>
+- Speak plainly. Avoid bureaucratic language.
+- Never assume prior knowledge of how systems work.
+  Define acronyms (e.g. "SAI — your financial
+  need score") on first use.
+- Be direct: lead with the answer, then explain.
+  Never bury the answer in a long preamble.
+
+<span class="comment"># RESPONSE FORMAT</span>
+- Short answers for simple facts (1-3 sentences)
+- Structured answers for plans (use clear steps)
+- Always end complex answers with a next action:
+  "Your next step: ..."
+- Never write more than the student needs.
+
+<span class="comment"># SCOPE RULES</span>
+- Stay within academic, financial, career topics
+- Mental health concerns: acknowledge warmly,
+  refer to campus counseling services
+- Legal/visa questions: refer to the institution's
+  international students office</pre>
+              <div class="note">
+                This is the most critical layer for trust and accuracy. Refine
+                these rules continuously as you observe where LumiArc goes wrong in
+                production. Never gut this layer to save tokens.
+              </div>
+            </div>
+          </div>
+
+          <div class="layer l5">
+            <div class="layer-head" onclick="toggleLayer(this)">
+              <span>Layer 5 — User message</span>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span class="badge">Per-query · raw input</span>
+                <span class="toggle">▾</span>
+              </div>
+            </div>
+            <div class="layer-body">
+              <pre><span class="comment"># STUDENT QUERY</span>
+<span class="val">"Should I drop CSE 101 this semester?
+My grade isn't great and I have a job interview
+coming up that's stressing me out."</span></pre>
+              <div class="note">
+                Exactly what the student typed — no modifications. Notice this
+                query mixes academic (drop a class), financial (GPA affects Cal
+                Grant), and emotional (stressed) signals. Layers 1–4 give LumiArc
+                full context to address all three dimensions in one response.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          Downgraded stack — prompt and context control
+        </div>
+        <div class="card">
+          <div class="card-title">Two levers control depth</div>
+          <div class="card-sub">
+            When a free user exceeds their rolling token budget, all queries
+            route to DeepSeek V3.2. The quality difference is controlled
+            through prompt instructions and context injection — not model
+            capability. Two levers work together to ensure the downgraded
+            experience is safe, accurate, and clearly limited.
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Layer 4 — behaviour rules swap</div>
+            <div class="card-sub">
+              On the full stack, Layer 4 instructs: "When a query has
+              implications across academic, financial, or career pillars,
+              identify and address all affected areas. Connect the dots for
+              the student." On the downgraded stack, Layer 4 swaps to:
+              "Answer the student's question within the current pillar.
+              If the question may have implications in other pillars, name
+              which pillars may be affected but do not analyze the
+              specifics. Direct the student to the full AI for detailed
+              analysis."
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Layer 2 — context trimming</div>
+            <div class="card-sub">
+              On the full stack, Layer 2 includes the student's complete
+              profile — academic progress, financial aid, career goals. On
+              the downgraded stack, Layer 2 can be trimmed to only inject
+              context relevant to the current screen. If the student is on
+              the academic tab, only academic data is injected. The model
+              cannot hallucinate cross-pillar connections to data it doesn't
+              have in the prompt.
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            Middle-ground cross-pillar flagging
+          </div>
+          <div class="card-sub">
+            The downgraded stack does not attempt detailed cross-pillar
+            analysis — but it does flag risks. This is the middle ground
+            between full analysis and silence. On the full stack: "Dropping
+            CSE 101 would put you at 9 units, below full-time. This triggers
+            an SAP review — your Pell Grant of $7,395 requires full-time
+            enrollment, and your Cal Grant GPA verification is due March
+            2nd. Here's what to do..." On the downgraded stack: "Dropping
+            CSE 101 would put you at 9 units, below full-time. This could
+            affect your financial aid eligibility — including grants that
+            require full-time enrollment. For a detailed breakdown of what's
+            at risk and what to do, start your free trial or check back
+            tomorrow."
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Warning messages</div>
+          <div class="card-sub">
+            Every response on the downgraded stack includes a contextual
+            warning. Not a generic disclaimer — a specific note about what's
+            limited in this response. "This answer covers your academic
+            situation. It may also affect your financial aid. For full
+            analysis, start your free trial or check back tomorrow." The
+            warning connects directly to the trial prompt at the moment of
+            highest friction.
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            Flagging risks without analyzing them requires almost no
+            reasoning — the model just recognizes that enrollment status
+            connects to financial aid. Any model can do this reliably. The
+            part that requires stronger reasoning is quantifying the risk,
+            calculating the specific impact, and building an action plan.
+            That's what the full stack provides and the downgraded stack
+            withholds. The student gets warned about risks they didn't know
+            about (valuable, builds trust) but the actionable detail is
+            behind the upgrade (drives conversion).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 4 — ACCURACY STRATEGY
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-accuracy">
+      <div class="section">
+        <div class="section-title">
+          The problem — three layers of deadline complexity
+        </div>
+        <div class="acc-layer">
+          <div class="acc-icon">🌐</div>
+          <div>
+            <div class="acc-title">Federal deadlines — low risk</div>
+            <div class="acc-desc">
+              Stable, well-documented, widely indexed. Examples: FAFSA national
+              deadline, federal loan disbursement windows. Model training data
+              is usually reliable here.
+            </div>
+          </div>
+        </div>
+        <div class="acc-layer">
+          <div class="acc-icon">🗺️</div>
+          <div>
+            <div class="acc-title">State deadlines — medium risk</div>
+            <div class="acc-desc">
+              Change yearly. Examples: Cal Grant GPA verification, state grant
+              programs. Must be fetched fresh every cycle — never rely on
+              training data alone.
+            </div>
+          </div>
+        </div>
+        <div class="acc-layer">
+          <div class="acc-icon">🏫</div>
+          <div>
+            <div class="acc-title">Institutional deadlines — high risk</div>
+            <div class="acc-desc">
+              Every school differs. Examples: UCSD registration windows,
+              specific department deadlines. Not reliably in model training
+              data. Always search before answering.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">The solution</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Always search first</div>
+            <div class="card-sub">
+              Every time-sensitive query triggers a web search before the AI
+              call. The result is injected into Layer 3. LumiArc never answers
+              deadline or dollar-amount questions from training data alone.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Cite everything</div>
+            <div class="card-sub">
+              Every date and dollar figure in a response must include a source
+              citation. Layer 4 enforces this. If live data wasn't fetched, LumiArc
+              tells the student and links to the official source.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Flag uncertainty</div>
+            <div class="card-sub">
+              When confidence is low, LumiArc says so explicitly: "Based on
+              [source], but verify directly at [url]." Calibrated uncertainty is
+              more trustworthy than false confidence.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Data age check</div>
+            <div class="card-sub">
+              If fetched data is older than 48 hours, LumiArc flags it to the
+              student. The Layer 3 template always includes the fetch timestamp
+              for this reason.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 5 — PRICING & COSTS
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-pricing">
+      <div class="section">
+        <div class="section-title">Plans</div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title" style="font-size: 16px">Free</div>
+            <div class="card-sub" style="margin-top: 6px">
+              Degree Overview, Requirements Checklist, GPA Tracker, 7 AI
+              schedule revisions/semester, first 2 semesters of Degree Path,
+              basic AI counselor. Document uploads always free.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="font-size: 16px">$5.99/mo</div>
+            <div class="card-sub" style="margin-top: 6px">
+              Full access to all features. Cancel anytime. Low-commitment entry
+              point — priced competitively within the $4.99–7.99 student
+              app range. 9 months of
+              monthly = $53.91 total.
+            </div>
+          </div>
+          <div class="card" style="border: 2px solid #2563eb">
+            <div class="card-title" style="font-size: 16px">
+              $34.99 / academic year
+            </div>
+            <div style="margin-top: 4px">
+              <span class="badge b-green">Save 35% — best value</span>
+            </div>
+            <div class="card-sub" style="margin-top: 6px">
+              One-time payment. $3.89/mo effective. Full year + free summer.
+              Covers all calendar systems (semester, quarter, trimester). "Pay
+              for 6, get 12." Zero mid-year churn. ~40% higher LTV vs monthly.
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            The academic year plan is the push plan. Badge it "Best value,"
+            center it in the UI, highlight the $19 savings. Every user converted
+            from monthly to annual is worth ~40% more in lifetime revenue.
+            Summer inclusion costs almost nothing (minimal AI usage on 1–2
+            courses) and acts as a retention bridge to fall renewal.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">7-day free trial</div>
+        <div class="card">
+          <div class="card-title">Student-triggered, not automatic</div>
+          <div class="card-sub">
+            Every paid feature is available for 7 days when the student
+            chooses to start the trial. The trial is not pushed during
+            onboarding — students complete onboarding on the free plan, use
+            the free features, and discover the paid walls naturally. A quiet
+            "7-day free trial available" message appears on paywall screens
+            (Degree Path cutoff, Grade Tracker, What-if conversations). The
+            student decides when the moment is right.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Why student-triggered works</div>
+          <div class="card-sub">
+            A student who starts the trial during syllabus week has no reason
+            to use Grade Tracker or What-if conversations yet — they burn 7
+            days before they need the features. A student who starts it in
+            week 3 after getting a bad midterm grade back will use every paid
+            feature intensively. Self-selection ensures the trial starts at
+            the moment of highest need, which maximizes conversion.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">What happens during and after</div>
+          <div class="card-sub">
+            During the trial, the student gets full access: Grade Tracker
+            (syllabus uploads + grade projections), complete Degree Path to
+            graduation, What-if AI conversations, unlimited schedule
+            revisions, full cross-pillar analysis. All onboarding data is
+            already in the system from the free plan — transcript, degree
+            requirements, aid status. The trial unlocks deeper AI reasoning
+            on top of data the student already entered. After 7 days, paid
+            features lock but no data is deleted. The Grade Tracker the
+            student configured is still there — they just can't see
+            projections. The full Degree Path collapses to 2 semesters. The
+            data is one payment away from being accessible again.
+          </div>
+        </div>
+        <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+          <div class="card-sub" style="color: #633806">
+            The trial converts because students don't value what they've never
+            had, but they fight to keep what they've experienced. A student
+            who spent 20 minutes setting up Grade Tracker for 5 courses and
+            then sees it lock is far more likely to pay than one who never
+            touched it. The trial lets the product sell itself at the exact
+            moment the student needs it most.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Free tier AI limits</div>
+        <div class="card">
+          <div class="card-title">Rolling 24-hour token budget</div>
+          <div class="card-sub">
+            Free users get a token budget on a rolling 24-hour window —
+            roughly equivalent to 15 AI conversations. Backend tracks actual
+            token usage. Frontend displays a simplified conversation count
+            with a progress bar. Each message's token cost expires 24 hours
+            after it was sent, so the budget is always refilling. The student
+            is never fully locked out — when the budget is exceeded, the AI
+            downgrades instead of stopping.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Why rolling, not monthly</div>
+          <div class="card-sub">
+            A monthly reset punishes a student who has one heavy week —
+            they'd wait 3 weeks with degraded AI, long enough to churn.
+            A rolling 24-hour window means heavy usage on Monday doesn't
+            affect Friday. The budget recovers overnight, matching how
+            students naturally use the app — a session today, another
+            tomorrow. Only sustained heavy daily usage hits the wall
+            consistently, and those students are self-identifying as power
+            users most likely to convert.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label">Budget size</span
+              ><span class="row-val"
+                >~50,000 tokens per 24-hour rolling window. Roughly equivalent
+                to 15 average conversations (mix of Simple through Complex
+                queries).</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Frontend display</span
+              ><span class="row-val"
+                >Conversation count + progress bar. No token jargon. "5
+                conversations remaining" is clear. The bar depletes as they
+                use AI features.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Token weighting</span
+              ><span class="row-val"
+                >A Simple query (~1,000 tokens) uses less budget than a
+                Complex query (~8,300 tokens). The frontend conversation
+                count adjusts dynamically — complex questions cost more
+                "conversations" than simple ones.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">All tiers accessible</span
+              ><span class="row-val"
+                >Free users can access all AI tiers (Simple through Complex)
+                within their budget. They experience the full product, just
+                in limited quantity.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Downgrade system</div>
+        <div class="card">
+          <div class="card-title">
+            Single threshold — full stack or downgraded stack
+          </div>
+          <div class="card-sub">
+            When the rolling budget is exceeded, all queries route to
+            DeepSeek V3.2 regardless of complexity tier. No sliding scale,
+            no intermediate steps. The student is either on the full
+            optimized stack (Flash / DeepSeek / GPT-4.1 / GPT-5) or the
+            downgraded stack (DeepSeek only). Simple and Normal queries feel
+            the same on either stack — DeepSeek handles these natively.
+            Advanced and Complex queries lose depth but still produce useful
+            answers.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">What the student experiences</div>
+          <div class="card-sub">
+            <div class="row">
+              <span class="row-label">Simple queries</span
+              ><span class="row-val"
+                >No noticeable difference. "When does FAFSA open?" works the
+                same on DeepSeek as on Flash.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Normal queries</span
+              ><span class="row-val"
+                >No noticeable difference. "Am I eligible for Cal Grant?"
+                uses the student profile and answers correctly on either
+                stack.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Advanced queries</span
+              ><span class="row-val"
+                >Shallower answer. DeepSeek handles the primary question but
+                flags cross-pillar implications without analyzing them in
+                detail. Warning message explains the limitation and prompts
+                trial or next-day recovery.</span
+              >
+            </div>
+            <div class="row">
+              <span class="row-label">Complex queries</span
+              ><span class="row-val"
+                >Simplified response with a warning. Full degree path
+                generation or comprehensive aid review gets a directionally
+                correct but less detailed answer. Warning prompts trial for
+                full analysis.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+          <div class="card-sub" style="color: #633806">
+            The downgrade keeps the student in the app. A hard cutoff risks
+            the student closing LumiArc and forgetting about it. The quality
+            difference sells the upgrade better than any marketing copy —
+            the student experiences the gap between what they got and what
+            they could get, every time they ask a question the lighter model
+            handles less thoroughly.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Billing design</div>
+        <div class="card">
+          <div class="row">
+            <span class="row-label">Billing unit</span
+            ><span class="row-val"
+              >Academic year — not per-term. One price covers Fall through
+              Spring regardless of whether the school uses semesters, quarters,
+              or trimesters. Tied to the calendar, not the institution's term
+              structure.</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Summer policy</span
+            ><span class="row-val"
+              >Free for paid subscribers. AI costs during summer are ~20% of
+              normal (students taking 1–2 courses). No charge, no cancellation
+              friction. Retention bridge to fall renewal.</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">App store cut</span
+            ><span class="row-val"
+              >30% in year 1. Drops to 15% under Apple Small Business Program
+              (under $1M revenue) or after 12 consecutive subscription
+              months.</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Free trial</span
+            ><span class="row-val"
+              >7 days, student-triggered. Available once per student. Not
+              pushed during onboarding — surfaced on paywall screens when the
+              student encounters a paid feature. Full paid access during
+              trial. Data preserved after expiry, features lock.</span
+            >
+          </div>
+          <div class="row">
+            <span class="row-label">Academic year length</span
+            ><span class="row-val"
+              >Federal minimum is 30 weeks of instruction (~7.5 months). In
+              practice, all US schools run 8–9 months on the calendar (Aug/Sep
+              through May/Jun). No accredited school has an academic year
+              shorter than this.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          Optimized AI routing stack — pricing per 1M tokens
+        </div>
+        <div class="route-table">
+          <div
+            class="route-head"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span>Tier</span><span>Model</span><span>Input</span
+            ><span>Output</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span><span class="badge b-green">Simple</span></span>
+            <span>Gemini Flash (Google)</span>
+            <span>$0.15</span><span>$0.60</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span><span class="badge b-teal">Normal</span></span>
+            <span>DeepSeek V3.2</span>
+            <span>$0.28</span><span>$0.42</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span><span class="badge b-amber">Advanced</span></span>
+            <span>GPT-4.1 (OpenAI)</span>
+            <span>$2.00</span><span>$8.00</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span><span class="badge b-coral">Complex</span></span>
+            <span>GPT-5 (OpenAI)</span>
+            <span>$1.25</span><span>$10.00</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 100px 100px"
+          >
+            <span><span class="badge b-gray">Parsing</span></span>
+            <span>GPT-4.1 (OpenAI)</span>
+            <span>$2.00</span><span>$8.00</span>
+          </div>
+        </div>
+        <div
+          class="card"
+          style="background: #faeeda; border-color: #f0d9b5; margin-top: 10px"
+        >
+          <div class="card-sub" style="color: #633806">
+            Prices as of March 2026. The stack is provider-agnostic — LumiArc's
+            prompt layers work across any model. No vendor lock-in. Swap
+            models as pricing changes or better options emerge — the routing
+            tier structure stays the same.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          AI cost per student per month — by usage profile
+        </div>
+        <div class="route-table">
+          <div
+            class="route-head"
+            style="grid-template-columns: 90px 1fr 90px 90px"
+          >
+            <span>Usage</span><span>Behaviour</span><span>Free</span
+            ><span>Paid</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 90px 90px"
+          >
+            <span>Light</span>
+            <span
+              >~4 sessions/mo. Checks degree progress, asks a simple question or
+              two.</span
+            >
+            <span>~$0.04</span><span>~$0.08</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 90px 90px"
+          >
+            <span>Normal</span>
+            <span
+              >~10 sessions/mo. Tracks grades, checks requirements, builds
+              schedule, asks questions.</span
+            >
+            <span>~$0.10</span><span>~$0.22</span>
+          </div>
+          <div
+            class="route-row"
+            style="grid-template-columns: 90px 1fr 90px 90px"
+          >
+            <span>Heavy</span>
+            <span
+              >~22 sessions/mo. Daily use. What-if scenarios, schedule rebuilds,
+              full degree path, cross-pillar queries.</span
+            >
+            <span>~$0.15</span><span>~$0.30</span>
+          </div>
+        </div>
+        <div
+          class="card"
+          style="background: #eaf3de; border-color: #c5dfa8; margin-top: 10px"
+        >
+          <div class="card-sub" style="color: #27500a">
+            Even the heaviest paid user costs ~$0.30/mo in AI. Monthly plan nets
+            $4.19/mo after 30% store cut. Academic year plan nets $2.04/mo. Both
+            cover AI costs comfortably at every usage level. The business
+            constraint is never margin — it's conversion rate.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Unit economics per paid user</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Monthly subscriber ($5.99/mo)</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">Gross revenue</span
+                ><span class="row-val">$5.99/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Net after 30% store cut</span
+                ><span class="row-val">$4.19/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">AI cost (normal usage)</span
+                ><span class="row-val">~$0.22/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Margin per user</span
+                ><span class="row-val">~$3.97/mo (95%)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Avg retention</span
+                ><span class="row-val"
+                  >~8–10 months (12–18% monthly churn)</span
+                >
+              </div>
+              <div class="row">
+                <span class="row-label">Est. annual LTV</span
+                ><span class="row-val">~$35–42</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Academic year subscriber ($34.99/yr)</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">Gross revenue</span
+                ><span class="row-val">$34.99/year ($2.92/mo)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Net after 30% store cut</span
+                ><span class="row-val">$24.49/year ($2.04/mo)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">AI cost (normal usage)</span
+                ><span class="row-val">~$0.22/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Margin per user</span
+                ><span class="row-val">~$1.82/mo (89%)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Avg retention</span
+                ><span class="row-val"
+                  >12 months locked (zero mid-year churn)</span
+                >
+              </div>
+              <div class="row">
+                <span class="row-label">Est. annual LTV</span
+                ><span class="row-val">$24.49 guaranteed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #faeeda; border-color: #f0d9b5">
+          <div class="card-sub" style="color: #633806">
+            Monthly LTV is higher when subscribers stick around, but churn
+            erodes it. Annual LTV is lower per-month but guaranteed — no churn
+            risk. At a 15% monthly churn rate, the effective annual LTV of a
+            monthly subscriber (~$35–42) is only marginally higher than an
+            annual subscriber ($24.49), while carrying significantly more risk.
+            Push annual.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Spending estimates by scale</div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title">Early (1–100 users)</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">AI costs</span
+                ><span class="row-val">$5–30/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Infrastructure</span
+                ><span class="row-val">Free (Supabase free tier)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Total</span
+                ><span class="row-val">$5–30/mo</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Growth (100–500 users)</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">AI costs</span
+                ><span class="row-val">$30–120/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Infrastructure</span
+                ><span class="row-val">$25/mo (Supabase Pro)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Total</span
+                ><span class="row-val">$55–145/mo</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Scale (1,000+ users)</div>
+            <div class="card-sub">
+              <div class="row">
+                <span class="row-label">AI costs</span
+                ><span class="row-val">$150–500/mo</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Infrastructure</span
+                ><span class="row-val">$25/mo (Supabase Pro)</span>
+              </div>
+              <div class="row">
+                <span class="row-label">Total</span
+                ><span class="row-val">$175–525/mo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="card"
+          style="background: #faeeda; border-color: #f0d9b5; margin-top: 10px"
+        >
+          <div class="card-sub" style="color: #633806">
+            Prompt caching is enabled from day one. Layers 1 + 4 (~1,200
+            tokens of static prompt) are identical across all calls and cache
+            perfectly, saving 30–35% on input costs. The dollar savings grow
+            with scale — negligible at Early, meaningful at Growth, significant
+            at Scale.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Conversion assumptions</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Pessimistic — 4% conversion</div>
+            <div class="card-sub">
+              Students are the most price-sensitive audience. Free tier is
+              genuinely useful on its own. Student app conversion
+              benchmarks typically range from 3–8% for utility apps.
+              A niche utility app would likely sit at or below that. Break-even
+              requires very few paid users — the free tier barely costs anything
+              to serve.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Optimistic — 14% conversion</div>
+            <div class="card-sub">
+              Requires paid features to feel like a genuine need. Strongest
+              upgrade moments: Degree Path 2-semester cutoff (natural
+              cliffhanger), Grade Tracker mid-semester when stress peaks,
+              What-if conversations when GPA threatens financial aid. If these
+              moments land, 12–15% is achievable.
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: #eaf3de; border-color: #c5dfa8">
+          <div class="card-sub" style="color: #27500a">
+            Profitable across all scenarios. Even the worst case — Early stage,
+            pessimistic conversion, mostly monthly subscribers — produces
+            positive margin. The AI cost per free user ($0.04–0.15/mo) is
+            negligible. The conversion rate question is purely about revenue
+            scale, not survival.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Future — institutional licensing</div>
+        <div class="card">
+          <div class="card-sub">
+            Not for MVP. Build for individual students first. Once LumiArc has
+            traction at a specific school (e.g. 500 students at UCSD), walk into
+            the advising office with usage data: "500 of your students are
+            already using this." Institutional data eliminates onboarding
+            friction — no PDF uploads, structured catalog data piped in
+            directly. Pricing: per-student-per-year (e.g. $2–5/student). A
+            20,000-student school at $3/student = $60K/year from one contract.
+            The data structures (Degree, Requirement, Course interfaces) are
+            already institution-agnostic — designed to receive institutional
+            feeds without changes.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     TAB 4 — DECISIONS
+══════════════════════════════════════════════ -->
+    <div class="page" id="tab-decisions">
+      <div class="section">
+        <div class="section-title">Decisions</div>
+
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 1</span>
+            <span class="decision-title"
+              >Launch market — one country first, or global from day one?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong>Decision: USA first.</strong> LumiArc will launch exclusively
+            in the United States and remain US-focused until the core product is
+            proven. <br /><br />
+            The US market is the right starting point for several reasons. The
+            financial aid system — FAFSA, Pell Grants, state grants, subsidized
+            loans — is a unified federal framework that applies across all 50
+            states, giving LumiArc a consistent data foundation from day one. The
+            college student population in the US is large and underserved by
+            tools that are genuinely helpful rather than generic. Competition is
+            low. And English-only scope keeps the language and compliance
+            surface manageable.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  All financial aid logic is built around FAFSA, federal aid,
+                  and state grant programs (Cal Grant, TAP, etc.)
+                </li>
+                <li>
+                  Deadline data coverage targets US institutions only — no OSAP,
+                  Student Finance, or equivalent
+                </li>
+                <li>
+                  Layer 2 student profile uses US-specific fields (state,
+                  domestic/international status, dependency status)
+                </li>
+                <li>
+                  International expansion is a future phase; Decision 5 (non-US
+                  aid systems) is explicitly deferred
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 2</span>
+            <span class="decision-title"
+              >Monetization model — freemium, subscription, or institution
+              licensing?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong
+              >Decision: Freemium with monthly ($5.99/mo) and academic year
+              ($34.99 one-time) plans. Institution licensing deferred to
+              post-traction phase.</strong
+            >
+            <br /><br />
+            Three plans: Free ($0), Monthly ($5.99/mo), and Academic Year
+            ($34.99 one-time payment). The free tier is genuinely useful — it's
+            the acquisition funnel, not a crippled demo. The paid line is drawn
+            at AI reasoning depth, not data access. Uploads are always free. The
+            academic year plan covers Fall through Spring plus free summer,
+            regardless of whether the school uses semesters, quarters, or
+            trimesters. Billing is tied to the calendar, not the institution's
+            term structure. Institution licensing is a future growth multiplier
+            — build for individual students first, architect the data layer so
+            institutional feeds can slot in later.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  Free: Degree Overview, Requirements Checklist, GPA Tracker, 7
+                  AI schedule revisions/semester, first 2 semesters of Degree
+                  Path, basic AI counselor (Simple + Normal tier)
+                </li>
+                <li>
+                  Paid: Grade Tracker, What-if AI conversations, full Degree
+                  Path, unlimited schedule revisions, full cross-pillar analysis
+                </li>
+                <li>
+                  Monthly at $5.99 is the "try it" option — priced within the
+                  standard student app range ($4.99–7.99), low commitment
+                </li>
+                <li>
+                  Academic year at $34.99 is the push plan — 35% savings vs
+                  monthly, "pay for 6, get 12" framing, zero mid-year churn,
+                  ~40% higher LTV per user
+                </li>
+                <li>
+                  Summer is free for paid subscribers — costs nearly nothing to
+                  serve (~20% of normal AI usage), acts as retention bridge to
+                  fall renewal
+                </li>
+                <li>
+                  App store takes 30% (drops to 15% under Apple Small Business
+                  Program or after 12 consecutive subscription months)
+                </li>
+                <li>
+                  Document uploads (transcript, degree PDF) are free for all
+                  users — onboarding parse costs ~$0.03–0.05 per student
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 3</span>
+            <span class="decision-title"
+              >Tech stack — what to build it with?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong
+              >Decision: Supabase for backend, Expo/React Native for mobile,
+              Next.js on Vercel for landing page, multi-model AI routing,
+              Sentry and PostHog for tooling.</strong
+            >
+            <br /><br />
+            <strong>Backend — Supabase.</strong> PostgreSQL database for all student data (profiles, degree requirements, scholarship records, aid data). Built-in auth handles signup, login, and OAuth (Google, Apple). Edge Functions run all background jobs — scheduled deadline searches, alert logic, SAP monitoring. Push notifications triggered from Edge Functions through Expo's push API. One service, one bill. Free tier covers development; Pro tier is $25/month flat at scale.
+            <br /><br />
+            <strong>Mobile app — Expo / React Native.</strong> Single codebase for iOS and Android. This is where students interact with LumiArc — onboarding, uploads, all three pillar screens, AI counselor conversations.
+            <br /><br />
+            <strong>Landing page — Next.js on Vercel.</strong> Exists primarily as a requirement for App Store and Google Play publishing (privacy policy, support contact, app description). Vercel handles DNS and SSL. Kept minimal — not a product surface.
+            <br /><br />
+            <strong>AI routing stack.</strong> Four models across four complexity tiers. Gemini Flash for Simple queries (definitions, single facts). DeepSeek V3.2 for Normal queries (eligibility checks, profile-based reasoning). GPT-4.1 for Advanced queries and all document parsing (transcripts, degree PDFs, syllabi, award letters, resumes). GPT-5 for Complex queries (full degree path, comprehensive aid analysis, career roadmap). Prompt caching enabled from day one on the static layers (persona + behaviour rules).
+            <br /><br />
+            <strong>Tooling — Sentry + PostHog.</strong> Sentry for error tracking — set up with the Expo project from the start. PostHog for product analytics — added once real users are interacting with the app. Tracks the conversion moments, usage patterns, and upgrade triggers the pricing model depends on.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  All background jobs (scheduled deadline searches, alert logic,
+                  SAP monitoring) run as Supabase Edge Functions
+                </li>
+                <li>
+                  Push notifications go through Expo's push API
+                </li>
+                <li>
+                  Supabase free tier covers development; Pro tier is $25/month
+                  flat at scale
+                </li>
+                <li>
+                  Main cost variable at scale is AI model API calls, not
+                  infrastructure
+                </li>
+                <li>
+                  Landing page is a publishing requirement, not a product surface — kept minimal and iterated on later if needed
+                </li>
+                <li>
+                  Sentry added at project setup (free tier is generous, Expo/React Native support is native)
+                </li>
+                <li>
+                  PostHog added once there are screens to track — not on day one, but before any real users hit the app
+                </li>
+                <li>
+                  Tech stack follows product decisions — chosen for simplicity
+                  and low cost, not engineering preference
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 4</span>
+            <span class="decision-title"
+              >Deadline database — how to keep it fresh and accurate at
+              scale?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong
+              >Decision: No maintained database — on-demand web search at query
+              time, scheduled background searches for proactive alerts.</strong
+            >
+            <br /><br />
+            Deadline data is public. Every US institution publishes it on their
+            financial aid and registrar pages. studentaid.gov covers federal
+            deadlines. State aid commissions (e.g. CSAC for Cal Grant) cover
+            state deadlines. The problem was never availability — it was the
+            maintenance burden of keeping LumiArc's own copy accurate across
+            thousands of institutions every academic cycle.
+            <br /><br />
+            The solution is to never maintain a copy at all. For on-demand
+            queries, LumiArc searches official sources at query time and injects
+            the result into Layer 3. For proactive alerts, a Supabase Edge
+            Function runs on a weekly schedule per student, searches for their
+            relevant deadlines, and fires a notification if a threshold is
+            crossed. Official sources are always the ground truth.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  On-demand deadline queries always trigger a web search before
+                  the AI call — never answered from training data alone
+                </li>
+                <li>
+                  Background search runs weekly per student — sufficient cadence
+                  since deadlines don't change mid-cycle
+                </li>
+                <li>
+                  If a background search fails or returns a bad result, LumiArc
+                  defaults to directing the student to the official source
+                  rather than firing an uncertain alert
+                </li>
+                <li>
+                  No deadline database to build, maintain, or keep current —
+                  removes an entire class of operational risk
+                </li>
+                <li>
+                  Scales to any US institution without additional data work
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 5</span>
+            <span class="decision-title"
+              >International students — how to handle non-US financial aid
+              systems?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong>Decision: Serve international students at US institutions with status-aware feature blocking and targeted scholarship routing. Students at non-US institutions remain explicitly deferred.</strong>
+            <br /><br />
+            International students studying at US institutions are already in LumiArc's launch market. They're at US schools, navigating a financial aid landscape that has no federal aid eligibility for F-1/J-1 visa holders, and they're among the most underserved student segments — no FAFSA, limited or no state aid, dependent entirely on institutional and private scholarships. LumiArc can serve them today with the existing stack. The decision is about what to show, what to block, and what to add.
+            <br /><br />
+            The residency/citizenship field collected at onboarding already drives this routing. Permanent residents are functionally identical to domestic students — full FAFSA eligibility, no special handling needed. DACA/AB 540 students are already handled via the California Dream Act routing. The new case being resolved here is F-1/J-1 visa holders.
+            <div class="implication">
+              <div class="implication-title">What gets blocked for F-1/J-1 students</div>
+              <ul>
+                <li>FAFSA features — hidden entirely, replaced with a clear explanation and link to the school's international student financial aid office</li>
+                <li>Federal grant eligibility checks (Pell, etc.) — blocked</li>
+                <li>Subsidized/unsubsidized federal loan features — blocked</li>
+                <li>Work-study — blocked (F-1 students have strict on-campus work authorization restrictions; LumiArc should not surface this without more nuance)</li>
+                <li>State grant features (Cal Grant, etc.) — blocked for F-1/J-1</li>
+              </ul>
+            </div>
+            <div class="implication">
+              <div class="implication-title">What stays the same</div>
+              <ul>
+                <li>Document uploads — award letter and scholarship PDFs work identically. Same hybrid parse-and-confirm flow. International institutional aid award letters may not include federal aid fields, but the parser displays what it extracts and the confirm flow handles gaps.</li>
+                <li>Scholarship tracking and deadline alerts — fully available, no changes</li>
+                <li>Academic planning and career prep pillars — no changes at all</li>
+              </ul>
+            </div>
+            <div class="implication">
+              <div class="implication-title">What gets added</div>
+              <ul>
+                <li>Scholarship references filtered for international students — IEFA, institutional international aid pages, private scholarship databases that don't restrict by citizenship. Same static curated map pattern as domestic, different filter branch based on status.</li>
+                <li>A clear onboarding explanation of what LumiArc can and can't help with for their situation — sets expectations upfront rather than letting students discover blocked features mid-use.</li>
+              </ul>
+            </div>
+            <div class="implication">
+              <div class="implication-title">What remains deferred</div>
+              Students at non-US institutions (Canada, UK, Australia, etc.) involve entirely different aid systems, academic calendars, and degree structures. This is a separate product scope and stays deferred until the US product is proven.
+            </div>
+          </div>
+        </div>
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 6</span>
+            <span class="decision-title"
+              >Scholarship reference list — how to build, curate, and keep it
+              current at scale?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong
+              >Decision: Personalized reference links plus student-driven upload
+              flow.</strong
+            >
+            <br /><br />
+            LumiArc doesn't need to maintain a scholarship database. The solution
+            is two-pronged. First, LumiArc provides personalized links to the right
+            doors — school scholarship portal, department-specific page, state
+            aid commission, external databases like Fastweb — filtered against
+            the student's profile. A CS student at UCSD gets the Jacobs School
+            engineering page, not the generic financial aid homepage. Second,
+            once the student finds scholarships, they upload the document into
+            LumiArc. Sonnet parses it, extracts structured records, student
+            confirms, and app logic handles tracking and deadline alerts from
+            there.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  No scholarship database to build or maintain — student brings
+                  the data in
+                </li>
+                <li>
+                  Only 7–11% of students receive scholarships and most have one
+                  or two — upload volume is naturally low, no exploitation risk
+                  worth engineering against beyond a passive monthly rate limit
+                </li>
+                <li>
+                  Reference list is a curated static list filtered by student
+                  profile — simpler and more reliable than web search for this
+                  purpose
+                </li>
+                <li>LumiArc is honest it's pointing to doors, not opening them</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="decision-block">
+          <div class="decision-head">
+            <span class="decision-num">Decision 7</span>
+            <span class="decision-title"
+              >Work-study matching — stay as eligibility + link, or build school
+              job board integration?</span
+            >
+            <span class="decision-status status-resolved">✓ Resolved</span>
+          </div>
+          <div class="decision-body">
+            <strong
+              >Decision: Eligibility check, explanation, and link only. No
+              matching feature needed.</strong
+            >
+            <br /><br />
+            Work-study matching was a misframing. Work-study eligibility is
+            determined entirely at FAFSA time — the student either has it in
+            their award or they don't. After that it's simply applying for a
+            campus job through the school's student employment portal, the same
+            as any normal job application. There's no matching complexity to
+            solve. LumiArc's value here is confirming eligibility, explaining what
+            work-study actually is (wages earned through part-time work, not
+            automatic cash — widely misunderstood), and linking directly to the
+            school's student employment portal.
+            <div class="implication">
+              <div class="implication-title">Implications</div>
+              <ul>
+                <li>
+                  No job board integration needed at any stage — the school's
+                  portal handles this
+                </li>
+                <li>LumiArc's job is explanation and routing, not matching</li>
+                <li>Feature is Simple tier, Gemini Flash, fully free</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Notes</div>
+        <div class="card">
+          <div class="card-sub" style="line-height: 1.8">
+            Decisions 1, 2, 3, 4, and 5 are resolved. Decision 2 (monetization) is
+            now settled as freemium with $5.99/mo and $34.99/academic year
+            plans. The pricing, AI routing stack, and unit economics are
+            documented in the Pricing &amp; Costs tab. Decision 5 (international
+            students) is resolved for F-1/J-1 students at US institutions —
+            federal and state aid features blocked, scholarship uploads and
+            tracking fully available, targeted international scholarship
+            references added. Students at non-US institutions remain explicitly
+            deferred. Decisions 6 and 7 are
+            scoped to the Financial Aid pillar and can be deferred past MVP,
+            since both have reasonable fallback positions (curated manual list
+            for references; eligibility + link for work-study).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchTab(name) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelector(`.tab[onclick="switchTab('${name}')"]`)
+          .classList.add("active");
+        document.getElementById("tab-" + name).classList.add("active");
+        window.scrollTo(0, 0);
+      }
+
+      function switchSubnav(name, el) {
+        document
+          .querySelectorAll(".subnav-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".subpage")
+          .forEach((p) => p.classList.remove("active"));
+        el.classList.add("active");
+        document.getElementById("subpage-" + name).classList.add("active");
+        window.scrollTo(0, 0);
+      }
+
+      function toggleLayer(head) {
+        const body = head.nextElementSibling;
+        const toggle = head.querySelector(".toggle");
+        const isOpen = body.style.display !== "none";
+        body.style.display = isOpen ? "none" : "block";
+        toggle.textContent = isOpen ? "▸" : "▾";
+      }
+    </script>
+  </body>
+</html>
