@@ -1,10 +1,11 @@
 "use client";
+// Edit test: Hello from the AI!
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
-import { GraduationCap, Banknote, Briefcase, CheckCircle } from "lucide-react";
+import { GraduationCap, Banknote, Briefcase } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,39 +14,45 @@ const PILLARS = [
     Icon: GraduationCap,
     title: "Academic Planning",
     description:
-      "Stay ahead of degree requirements, course planning, and prerequisite chains. Know what to do next.",
+      "Prerequisite chains that silently block your path. Requirements you didn't know about. Advising appointments weeks away. LumiArc keeps you a step ahead.",
+    hook: "Most students find out they're off-track the semester before graduation.",
     items: [
-      "Know exactly which courses fulfill your degree requirements",
-      "Get alerts before prerequisite chains close off your options",
-      "See your GPA impact before you drop or add a class",
-      "Plan next semester in minutes, not advising appointments",
+      "Catch missing requirements before they become a last-minute crisis",
+      "Get flagged when a prerequisite chain is quietly closing off your options",
+      "Simulate your GPA before you drop or add a course — not after",
+      "Track live GPA as grades come in — and know what you need on that final",
+      "Build next semester's schedule in minutes, not a 3-week wait for advising",
     ],
   },
   {
     Icon: Banknote,
-    title: "Financial Aid Made Simple",
+    title: "Financial Aid",
     description:
-      "Understand FAFSA deadlines, grants, loans, and aid status in plain language. Never miss a deadline.",
+      "Aid jargon, SAP thresholds, school-specific deadlines nobody explains. LumiArc makes your financial aid make sense.",
+    hook: "Miss one FAFSA deadline and your aid is delayed by a full semester.",
     items: [
-      "Track FAFSA deadlines specific to your school",
-      "See your grants, loans, and aid package in plain language",
-      "Get warned before Satisfactory Academic Progress (SAP) is at risk",
-      "Match with scholarships based on your profile",
+      "Deadlines tracked to your specific school — not generic national dates",
+      "Your aid package decoded in plain language, not financial jargon",
+      "Warned before your GPA puts your SAP standing at risk",
+      "Scholarships matched to your actual profile, not a public list",
     ],
   },
   {
     Icon: Briefcase,
-    title: "Career Prep Guidance",
+    title: "Career Prep",
     description:
-      "Get ready for your future with personalized career advice and job search strategies.",
+      "Internship windows that close while you're in class. No roadmap. No timing. LumiArc keeps your career on track without the scramble.",
+    hook: "Internship windows open and close while you're focused on midterms.",
     items: [
-      "Know when internship application windows open for your field",
-      "Get a personalized career roadmap based on your major",
-      "Resume and interview prep timed to your graduation date",
-      "Connect to on-campus resources before it's too late",
+      "Get notified when application windows open for your field — before they close",
+      "A career roadmap built around your major, year, and graduation date",
+      "Resume and interview prep timed to when you actually need it",
+      "Campus resources surfaced while you still have time to use them",
     ],
   },
 ];
+
+const SNAP_THRESHOLD = 0.15;
 
 const gradientTextStyle: React.CSSProperties = {
   background:
@@ -61,30 +68,13 @@ const WhatIsLumiArc = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
-  // Callout wrapper divs — Context 1 slide-in targets
-  const callout1Ref = useRef<HTMLDivElement>(null);
-  const callout2Ref = useRef<HTMLDivElement>(null);
-  const callout3Ref = useRef<HTMLDivElement>(null);
+  const calloutRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const h3Refs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const pRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Icon wrapper divs — Context 2 opacity targets
-  const icon1Ref = useRef<HTMLDivElement>(null);
-  const icon2Ref = useRef<HTMLDivElement>(null);
-  const icon3Ref = useRef<HTMLDivElement>(null);
-
-  // Heading refs — Context 2 gradient sweep targets
-  const h3_1Ref = useRef<HTMLHeadingElement>(null);
-  const h3_2Ref = useRef<HTMLHeadingElement>(null);
-  const h3_3Ref = useRef<HTMLHeadingElement>(null);
-
-  // Paragraph refs — Context 2 gradient sweep targets
-  const p1Ref = useRef<HTMLParagraphElement>(null);
-  const p2Ref = useRef<HTMLParagraphElement>(null);
-  const p3Ref = useRef<HTMLParagraphElement>(null);
-
-  // Right panel card refs
-  const card1Ref = useRef<HTMLDivElement>(null);
-  const card2Ref = useRef<HTMLDivElement>(null);
-  const card3Ref = useRef<HTMLDivElement>(null);
+  const ICONS = [GraduationCap, Banknote, Briefcase];
 
   // Context 1: one-shot entry reveal
   useGSAP(
@@ -99,11 +89,16 @@ const WhatIsLumiArc = () => {
       tl.fromTo(
         headlineRef.current,
         { clipPath: "inset(0 0 100% 0)", y: 20 },
-        { clipPath: "inset(0 0 0% 0)", y: 0, duration: 0.7, ease: "power3.out" },
+        {
+          clipPath: "inset(0 0 0% 0)",
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+        },
       );
 
       tl.fromTo(
-        [callout1Ref.current, callout2Ref.current, callout3Ref.current],
+        calloutRefs.current,
         { x: -40, autoAlpha: 0 },
         { x: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 },
         "-=0.4",
@@ -112,53 +107,108 @@ const WhatIsLumiArc = () => {
     { scope: sectionRef },
   );
 
-  // Context 2: pinned scroll sequence — one phase per pillar
+  // Context 2: pinned scroll sequence with snap
   useGSAP(
     () => {
-      const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
-      const icons = [icon1Ref.current, icon2Ref.current, icon3Ref.current];
-
-      gsap.set(cards, { autoAlpha: 0, x: 0, zIndex: 1 });
-      gsap.set(icons, { opacity: 0.3 });
+      gsap.set(cardRefs.current, { autoAlpha: 0, x: 0, zIndex: 1 });
+      gsap.set(iconRefs.current, { opacity: 0.3 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "center center",
-          end: "+=250vh",
+          end: "+=4500",
           pin: true,
-          scrub: 1,
+          scrub: 2,
+          snap: {
+            snapTo: (value) => {
+              const duration = tl.duration();
+              const positions = Object.values(
+                tl.labels as Record<string, number>,
+              )
+                .map((t) => t / duration)
+                .sort((a, b) => a - b);
+
+              let prev = 0;
+              let next = 1;
+              for (const pos of positions) {
+                if (pos <= value) prev = pos;
+                else {
+                  next = pos;
+                  break;
+                }
+              }
+
+              const pct = next > prev ? (value - prev) / (next - prev) : 1;
+              return pct >= SNAP_THRESHOLD ? next : prev;
+            },
+            duration: { min: 0.4, max: 0.8 },
+            ease: "power2.inOut",
+            delay: 0.15,
+          },
         },
       });
 
-      // Phase 1 — Academic Planning (0–2.8)
-      tl.set(card1Ref.current, { zIndex: 2 }, 0);
-      tl.fromTo(icon1Ref.current, { opacity: 0.3 }, { opacity: 1, duration: 2.8, immediateRender: false }, 0);
-      tl.fromTo(h3_1Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 0);
-      tl.fromTo(p1Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 0.3);
-      tl.fromTo(card1Ref.current, { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: 2.8, ease: "power2.out", immediateRender: false }, 0);
+      PILLARS.forEach((_, i) => {
+        const label = `phase${i + 1}`;
+        const outLabel = `phase${i + 1}-out`;
+        const prevCard = cardRefs.current[i - 1];
 
-      // Phase 1 Outro (2.8–3.5)
-      tl.to(card1Ref.current, { autoAlpha: 0, x: -20, duration: 0.7, ease: "power2.in" }, 2.8);
-      tl.set(card2Ref.current, { zIndex: 2 }, 3.5);
-      tl.set(card1Ref.current, { zIndex: 1 }, 3.5);
+        tl.addLabel(label);
+        tl.set(cardRefs.current[i], { zIndex: 2 });
+        if (prevCard) tl.set(prevCard, { zIndex: 1 });
 
-      // Phase 2 — Financial Aid Made Simple (3.5–6.3)
-      tl.fromTo(icon2Ref.current, { opacity: 0.3 }, { opacity: 1, duration: 2.8, immediateRender: false }, 3.5);
-      tl.fromTo(h3_2Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 3.5);
-      tl.fromTo(p2Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 3.8);
-      tl.fromTo(card2Ref.current, { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: 2.8, ease: "power2.out", immediateRender: false }, 3.5);
+        tl.fromTo(
+          iconRefs.current[i],
+          { opacity: 0.3 },
+          { opacity: 1, duration: 1.5, immediateRender: false },
+          label,
+        );
+        tl.fromTo(
+          h3Refs.current[i],
+          { backgroundPosition: "100% 0%" },
+          {
+            backgroundPosition: "0% 0%",
+            duration: 1.5,
+            immediateRender: false,
+          },
+          label,
+        );
+        tl.fromTo(
+          pRefs.current[i],
+          { backgroundPosition: "100% 0%" },
+          {
+            backgroundPosition: "0% 0%",
+            duration: 1.5,
+            immediateRender: false,
+          },
+          `${label}+=0.15`,
+        );
+        tl.fromTo(
+          cardRefs.current[i],
+          { autoAlpha: 0, x: 40 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            duration: 1.5,
+            ease: "power2.out",
+            immediateRender: false,
+          },
+          label,
+        );
 
-      // Phase 2 Outro (6.3–7.0)
-      tl.to(card2Ref.current, { autoAlpha: 0, x: -20, duration: 0.7, ease: "power2.in" }, 6.3);
-      tl.set(card3Ref.current, { zIndex: 2 }, 7.0);
-      tl.set(card2Ref.current, { zIndex: 1 }, 7.0);
+        // Don't add outro for the last card
+        if (i < PILLARS.length - 1) {
+          tl.addLabel(outLabel);
+          tl.to(
+            cardRefs.current[i],
+            { autoAlpha: 0, x: -20, duration: 0.4, ease: "power2.in" },
+            outLabel,
+          );
+        }
+      });
 
-      // Phase 3 — Career Prep Guidance (7.0–9.8)
-      tl.fromTo(icon3Ref.current, { opacity: 0.3 }, { opacity: 1, duration: 2.8, immediateRender: false }, 7.0);
-      tl.fromTo(h3_3Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 7.0);
-      tl.fromTo(p3Ref.current, { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 2.5, immediateRender: false }, 7.3);
-      tl.fromTo(card3Ref.current, { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: 2.8, ease: "power2.out", immediateRender: false }, 7.0);
+      tl.to({}, { duration: 0.5 });
     },
     { scope: sectionRef },
   );
@@ -167,124 +217,99 @@ const WhatIsLumiArc = () => {
     <section
       ref={sectionRef}
       id="what-is-lumiarc"
-      className="mx-5 mt-5 min-h-[calc(100vh-40px)] rounded-3xl overflow-hidden py-28 px-10 bg-white flex items-center justify-center"
+      className="mx-5 mt-5 min-h-[calc(100vh-40px)] rounded-3xl overflow-hidden py-28 px-10 bg-sky-50 flex flex-col items-center justify-center"
     >
+      <h1 ref={headlineRef} className="mb-12 drop-shadow-lg mr-auto">
+        What is LumiArc
+      </h1>
+
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         {/* Left panel */}
-        <div>
-          <h1 ref={headlineRef} className="mb-12 drop-shadow-lg">
-            What is LumiArc
-          </h1>
-
-          <div className="space-y-8">
-            {/* Pillar 1 */}
-            <div ref={callout1Ref} className="flex gap-4">
-              <div ref={icon1Ref} style={{ opacity: 0.3 }}>
-                <GraduationCap className="icon-lg mt-1 drop-shadow-md" />
+        <div className="space-y-8">
+          {PILLARS.map((pillar, i) => {
+            const Icon = ICONS[i];
+            return (
+              <div
+                key={i}
+                ref={(el) => {
+                  calloutRefs.current[i] = el;
+                }}
+                className="flex gap-4"
+              >
+                <div
+                  ref={(el) => {
+                    iconRefs.current[i] = el;
+                  }}
+                  style={{ opacity: 0.3 }}
+                >
+                  <Icon className="icon-lg mt-1 drop-shadow-md" />
+                </div>
+                <div>
+                  <h3
+                    ref={(el) => {
+                      h3Refs.current[i] = el;
+                    }}
+                    className="mb-2 drop-shadow-md"
+                    style={gradientTextStyle}
+                  >
+                    {pillar.title}
+                  </h3>
+                  <p
+                    ref={(el) => {
+                      pRefs.current[i] = el;
+                    }}
+                    style={gradientTextStyle}
+                  >
+                    {pillar.description}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 ref={h3_1Ref} className="mb-2 drop-shadow-md" style={gradientTextStyle}>
-                  {PILLARS[0].title}
-                </h3>
-                <p ref={p1Ref} style={gradientTextStyle}>
-                  {PILLARS[0].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 2 */}
-            <div ref={callout2Ref} className="flex gap-4">
-              <div ref={icon2Ref} style={{ opacity: 0.3 }}>
-                <Banknote className="icon-lg mt-1 drop-shadow-md" />
-              </div>
-              <div>
-                <h3 ref={h3_2Ref} className="mb-2 drop-shadow-md" style={gradientTextStyle}>
-                  {PILLARS[1].title}
-                </h3>
-                <p ref={p2Ref} style={gradientTextStyle}>
-                  {PILLARS[1].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 3 */}
-            <div ref={callout3Ref} className="flex gap-4">
-              <div ref={icon3Ref} style={{ opacity: 0.3 }}>
-                <Briefcase className="icon-lg mt-1 drop-shadow-md" />
-              </div>
-              <div>
-                <h3 ref={h3_3Ref} className="mb-2 drop-shadow-md" style={gradientTextStyle}>
-                  {PILLARS[2].title}
-                </h3>
-                <p ref={p3Ref} style={gradientTextStyle}>
-                  {PILLARS[2].description}
-                </p>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
 
-        {/* Right panel — stacked cards, one per pillar */}
-        <div className="relative h-96">
-          {/* Card 1 — Academic Planning */}
-          <div
-            ref={card1Ref}
-            className="absolute inset-0 rounded-2xl bg-linear-to-br from-sky-300 to-sky-100 shadow-lg p-8 flex flex-col gap-6"
-            style={{ opacity: 0, visibility: "hidden" }}
-          >
-            <div className="flex items-center gap-3">
-              <GraduationCap className="icon-lg" />
-              <h3>{PILLARS[0].title}</h3>
-            </div>
-            <ul className="space-y-3">
-              {PILLARS[0].items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
-                  <CheckCircle className="icon-sm mt-0.5 shrink-0 text-success" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Right panel */}
+        <div className="relative h-100">
+          {PILLARS.map((pillar, i) => {
+            const Icon = ICONS[i];
+            return (
+              <div
+                key={i}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl shadow-navy-900/20 flex flex-col"
+                style={{ opacity: 0, visibility: "hidden" }}
+              >
+                {/* Gold accent bar */}
+                <div className="h-0.75 bg-gold shrink-0" />
 
-          {/* Card 2 — Financial Aid Made Simple */}
-          <div
-            ref={card2Ref}
-            className="absolute inset-0 rounded-2xl bg-linear-to-br from-sky-300 to-sky-100 shadow-lg p-8 flex flex-col gap-6"
-            style={{ opacity: 0, visibility: "hidden" }}
-          >
-            <div className="flex items-center gap-3">
-              <Banknote className="icon-lg" />
-              <h3>{PILLARS[1].title}</h3>
-            </div>
-            <ul className="space-y-3">
-              {PILLARS[1].items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
-                  <CheckCircle className="icon-sm mt-0.5 shrink-0 text-success" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+                {/* Dark header */}
+                <div className="bg-navy-900 px-6 py-5 flex items-center gap-4 shrink-0">
+                  <Icon className="size-7 text-sky-300 shrink-0" />
+                  <h3 className="text-white!">{pillar.title}</h3>
+                </div>
 
-          {/* Card 3 — Career Prep Guidance */}
-          <div
-            ref={card3Ref}
-            className="absolute inset-0 rounded-2xl bg-linear-to-br from-sky-300 to-sky-100 shadow-lg p-8 flex flex-col gap-6"
-            style={{ opacity: 0, visibility: "hidden" }}
-          >
-            <div className="flex items-center gap-3">
-              <Briefcase className="icon-lg" />
-              <h3>{PILLARS[2].title}</h3>
-            </div>
-            <ul className="space-y-3">
-              {PILLARS[2].items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
-                  <CheckCircle className="icon-sm mt-0.5 shrink-0 text-success" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+                {/* White body */}
+                <div className="bg-white flex-1 px-6 pt-5 pb-6 flex flex-col">
+                  <p className="text-sm italic text-text-tertiary leading-relaxed mb-4">
+                    {pillar.hook}
+                  </p>
+                  <div className="h-px bg-border mb-4" />
+                  <ul className="space-y-2.5">
+                    {pillar.items.map((item, j) => (
+                      <li key={j} className="flex items-start gap-3">
+                        <span className="mt-2 size-1.5 rounded-full bg-gold shrink-0" />
+                        <span className="text-sm text-text-secondary leading-relaxed">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

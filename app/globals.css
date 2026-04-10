@@ -34,9 +34,6 @@
   --border-hover: #cbd5e1;
   --border-focus: #a4c8f0;
 
-  /* Semantic aliases */
-  --background: var(--navy-900);
-  --foreground: var(--text-primary);
 }
 
 @theme inline {
@@ -79,13 +76,123 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--navy-900);
+  color: var(--text-primary);
   font-family: var(--font-sans);
 }
 
+/* Responsive typography */
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+p {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+small {
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
 @layer components {
+  /* Nav */
   .nav-link {
     @apply px-3 py-1.5 rounded-full font-medium text-sm hover:bg-current/10 transition-colors duration-200;
+  }
+
+  /* Inputs & Textarea */
+  .input {
+    @apply w-full px-4 py-2.5 rounded-lg text-sm text-text-primary bg-sky-100 border border-border
+      placeholder:text-text-tertiary
+      hover:border-border-hover
+      focus:outline-none focus:border-border-focus focus:ring-2 focus:ring-sky-300/40
+      transition-colors duration-200;
+  }
+
+  textarea.input {
+    @apply resize-y min-h-24;
+  }
+
+  /* Links */
+  .link {
+    @apply text-navy-600 underline underline-offset-2 decoration-navy-600/40
+      hover:text-navy-900 hover:decoration-navy-900/60
+      focus:outline-none focus:ring-2 focus:ring-border-focus rounded-sm
+      transition-colors duration-150;
+  }
+
+  /* Buttons — base shared styles inlined into each variant (Tailwind v4 doesn't allow @apply on custom classes) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
+      bg-navy-900 text-text-inverse
+      hover:bg-navy-600
+      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus
+      transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
+      bg-sky-100 text-navy-900 border border-border
+      hover:bg-sky-300/40 hover:border-border-hover
+      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus
+      transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
+      bg-gold text-navy-900
+      hover:bg-gold/90
+      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold/60
+      transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm
+      text-navy-600
+      hover:bg-sky-100
+      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus
+      transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Icons */
+  .icon-sm { @apply shrink-0 text-text-secondary size-4; }
+  .icon-md { @apply shrink-0 text-text-secondary size-5; }
+  .icon-lg { @apply shrink-0 text-text-secondary size-6; }
+
+  /* Footer */
+  .footer-link {
+    @apply text-sky-200 hover:text-white transition-colors duration-150;
+  }
+
+  .footer-list {
+    @apply space-y-2 text-sm text-sky-200;
+  }
+
+  .footer-heading {
+    @apply font-semibold mb-4 text-white;
   }
 }

@@ -4,9 +4,49 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @AGENTS.md
 
+## CRITICAL: Use jcodemunch MCP for Code Navigation
+
+**Always use the `jcodemunch` MCP tools** instead of Glob/Grep/Read whenever the task involves exploring or searching the codebase. This is non-negotiable.
+
+| Task | Use |
+|---|---|
+| Browse file/folder structure | `jcodemunch__get_file_tree` |
+| Read a file | `jcodemunch__get_file_content` |
+| Get outline of a file (functions, classes) | `jcodemunch__get_file_outline` |
+| Get outline of the whole repo | `jcodemunch__get_repo_outline` |
+| Look up a specific symbol | `jcodemunch__get_symbol` / `jcodemunch__get_symbols` |
+| Search for a symbol by name | `jcodemunch__search_symbols` |
+| Full-text search across files | `jcodemunch__search_text` |
+| Index a folder or repo before searching | `jcodemunch__index_folder` / `jcodemunch__index_repo` |
+
+Only fall back to Glob/Grep/Read if a jcodemunch tool is unavailable or returns an error.
+
+## CRITICAL: Use claude-mem MCP for Persistent Memory
+
+**Always use `claude-mem` MCP tools** to read and write project memory across sessions. Do not rely solely on in-context information — check memory at the start of every session and save anything non-obvious that would be useful in the future.
+
+| When | Action |
+|---|---|
+| Start of every session | Search memory for project context (`claude-mem:mem-search` or `mcp__plugin_claude-mem_mcp-search__smart_search`) |
+| After completing significant work | Save decisions, gotchas, and non-obvious findings |
+| When user asks "do you remember…" or "did we already…" | Query memory first before answering |
+| After resolving a bug or making a key architectural decision | Record it so future sessions benefit |
+
+**Tools available:**
+- `mcp__plugin_claude-mem_mcp-search__smart_search` — semantic search across all memories
+- `mcp__plugin_claude-mem_mcp-search__get_observations` — fetch specific observations by ID
+- `mcp__plugin_claude-mem_mcp-search__search` — keyword search
+- `mcp__plugin_claude-mem_mcp-search__timeline` — view session history
+- `mcp__plugin_claude-mem_mcp-search__smart_outline` / `smart_unfold` — browse memory structure
+
+**Skills available** (invoke via the `Skill` tool):
+- `claude-mem:mem-search` — search memory and surface relevant past context
+- `claude-mem:make-plan` — plan a feature with memory-informed context
+- `claude-mem:do` — execute a plan using subagents
+
 ## Project Context
 
-This is the **LumiArc landing page** — a Next.js site deployed to Vercel. It is the `landing/` component of the larger LumiArc monorepo. See [utils/lumiArc_ref.html](utils/lumiArc_ref.html) for the full reference design and brand identity.
+This is the **LumiArc landing page** — a Next.js site deployed to Vercel. It is the `landing/` component of the larger LumiArc monorepo. See [ref_source/lumiArc_ref.html](ref_source/lumiArc_ref.html) for the full reference design and brand identity.
 
 ## Commands
 

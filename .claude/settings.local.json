@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/andre/.claude/**)",
+      "mcp__jcodemunch__list_repos",
+      "mcp__jcodemunch__index_folder",
+      "Bash(npm run:*)",
+      "mcp__jcodemunch__get_file_tree",
+      "mcp__jcodemunch__get_file_content",
+      "mcp__plugin_claude-mem_mcp-search__smart_search"
+    ]
+  }
+}
